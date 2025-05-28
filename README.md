@@ -2,6 +2,14 @@
 
 Developer Console for Unity with easy integration to existing projects.
 
+## Fork
+Forked to support development of [Scorching Engines](https://store.steampowered.com/app/2640660/Scorching_Engines/). <br>
+No compatibility with other Unity versions than the one used for SE's development will be tested, and may not be supported.
+Development will cater to SE's requirement first and foremost, so might not cater to others needs.
+
+Features not needed for SE might be stripped. 
+
+### Demo
 [WebGL demo](https://anarkila.github.io/DeveloperConsole/Demo)
 
 ### Use cases 
@@ -14,7 +22,8 @@ Developer Console for Unity with easy integration to existing projects.
 ## Getting Started
 1. Download and import [DeveloperConsole package](https://github.com/anarkila/DeveloperConsole/releases/download/v1.0.2/DeveloperConsole_1.0.2.unitypackage) into your project
 2. Drag & drop DeveloperConsole prefab into your scene
-3. Add ``[ConsoleCommand()]`` attribute to your methods like below. See [ConsoleExamples.cs](https://github.com/anarkila/DeveloperConsole/blob/main/Console/Assets/DeveloperConsole/Example%20scenes/Example%20scripts/ConsoleExamples.cs) for all examples. 
+3a. Add ``[ConsoleCommand()]`` attribute to your methods like below. See [ConsoleExamples.cs](https://github.com/anarkila/DeveloperConsole/blob/main/Console/Assets/DeveloperConsole/Example%20scenes/Example%20scripts/ConsoleExamples.cs) for all examples. 
+3b. Make sure your script is attached to a gameobject in the scene. As monobehaviour scripts not attached to a gameobject won't be picked up.
 4. Play your scene and press ``§`` to toggle Developer Console
 
 ```C#
@@ -97,7 +106,7 @@ Editor and Development build only:
 By default Unity ``Debug.Log()`` or ``Debug.LogError()`` messages will also output to Developer Console.
 
 ## Notes
-- Requires Unity 2019 or later
+- Requires ~~Unity 2019 or later~~ Unity 6.1 currently. Support with other versions than whats used for SE is not guaranteed
 - Uses old Unity input system
 - Uses Gameobject based UI
 - Uses TextMeshPro
