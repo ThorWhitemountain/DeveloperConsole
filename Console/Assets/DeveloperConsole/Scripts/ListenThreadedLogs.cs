@@ -2,8 +2,8 @@
 using System.Threading;
 using UnityEngine;
 
-namespace Anarkila.DeveloperConsole {
-
+namespace Anarkila.DeveloperConsole
+{
     /// <summary>
     /// This class listens Unity Debug.Log/LogError messages that were
     /// called from other than Unity main thread.
@@ -12,31 +12,36 @@ namespace Anarkila.DeveloperConsole {
     /// </summary>
 #pragma warning disable 0162
     [DefaultExecutionOrder(-9999)]
-    public class ListenThreadedLogs : MonoBehaviour {
-
+    public class ListenThreadedLogs : MonoBehaviour
+    {
         private static ListenThreadedLogs Instance;
 
         private static ConsoleLogOptions logOption = ConsoleLogOptions.DontPrintLogs;
-        private static List<string> messageBacklog = new List<string>();
-        private static List<string> messages = new List<string>();
-        private static volatile bool messagesQueued = false;
+        private static List<string> messageBacklog = new();
+        private static List<string> messages = new();
+        private static volatile bool messagesQueued;
 
-        private void Awake() {
+        private void Awake()
+        {
 #if UNITY_WEBGL
             enabled = false;
             return;
 #endif
-            if (Instance == null) {
+            if (Instance == null)
+            {
                 Instance = this;
             }
-            else {
+            else
+            {
                 Destroy(this);
             }
+
             ConsoleEvents.RegisterConsoleThreadedLogOptionsChanged += LogOptionsChanged;
             Application.logMessageReceivedThreaded += UnityLogEventThreaded;
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             ConsoleEvents.RegisterConsoleThreadedLogOptionsChanged -= LogOptionsChanged;
             Application.logMessageReceivedThreaded -= UnityLogEventThreaded;
             Instance = null;
@@ -50,52 +55,72 @@ namespace Anarkila.DeveloperConsole {
 #endif
         }
 
-        private void LogOptionsChanged(ConsoleLogOptions newLogOption) {
+        private void LogOptionsChanged(ConsoleLogOptions newLogOption)
+        {
             logOption = newLogOption;
             // enable/disable this script based on new ConsoleLogOptions
-            this.enabled = logOption == ConsoleLogOptions.DontPrintLogs ? false : true;
+            enabled = logOption == ConsoleLogOptions.DontPrintLogs ? false : true;
         }
 
-        private void Start() {
-            var settings = ConsoleManager.GetSettings();
-            if (settings == null) return;
+        private void Start()
+        {
+            ConsoleSettings settings = ConsoleManager.GetSettings();
+            if (settings == null)
+            {
+                return;
+            }
 
             // Get current log option setting for threaded logs
             logOption = settings.unityThreadedLogOption;
 
             // Don't print logs if ConsoleLogOptions.DontPrintLogs enum is selected
-            if (logOption == ConsoleLogOptions.DontPrintLogs) {
-                this.enabled = false;
+            if (logOption == ConsoleLogOptions.DontPrintLogs)
+            {
+                enabled = false;
                 Application.logMessageReceivedThreaded -= UnityLogEventThreaded;
             }
         }
 
-        private void UnityLogEventThreaded(string message, string stackTrace, LogType logType) {
-            if (ConsoleManager.IsRunningOnMainThread(Thread.CurrentThread)) return;
+        private void UnityLogEventThreaded(string message, string stackTrace, LogType logType)
+        {
+            if (ConsoleManager.IsRunningOnMainThread(Thread.CurrentThread))
+            {
+                return;
+            }
 
-            lock (messageBacklog) {
-                if (logType == LogType.Error || logType == LogType.Exception) {
+            lock (messageBacklog)
+            {
+                if (logType == LogType.Error || logType == LogType.Exception)
+                {
                     message = MessagePrinter.AppendStrackTrace(message, stackTrace, logOption);
                 }
+
                 messageBacklog.Add(message);
                 messagesQueued = true;
             }
         }
 
-        private void Update() {
+        private void Update()
+        {
             // early return if there's no messages to log!
-            if (!messagesQueued) return;
+            if (!messagesQueued)
+            {
+                return;
+            }
 
-            lock (messageBacklog) {
-                var temp = messages;
+            lock (messageBacklog)
+            {
+                List<string> temp = messages;
                 messages = messageBacklog;
                 messageBacklog = temp;
                 messagesQueued = false;
             }
 
-            for (int i = 0; i < messages.Count; i++) {
+            for (int i = 0; i < messages.Count; i++)
+            {
                 ConsoleEvents.Log(messages[i]);
             }
+
             messages.Clear();
         }
     }

@@ -1,0 +1,11 @@
+﻿{
+  "name": "com.thorwhitemountain.devoperconsole",
+  "version": "1.0.3",
+  "displayName": "Unity Developer Console",
+  "description": "This package provides a Developer Console, which provides an easy way to call methods from an in-game interace, as well as adding new commands",
+  "unity": "6000.1",
+  "dependencies": {  },
+  "author": {
+    "name": "Thor Whitemountain"
+  }
+}

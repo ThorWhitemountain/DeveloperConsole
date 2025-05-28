@@ -1,24 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Anarkila.DeveloperConsole {
-
+namespace Anarkila.DeveloperConsole
+{
 #pragma warning disable 1998
-    public static class MessageTracker {
-
+    public static class MessageTracker
+    {
         private static List<string> messages;
-        private static bool initDone = false;
-        private static int currentIndex = 0;
+        private static bool initDone;
+        private static int currentIndex;
         private static int maxMessageCount;
 
         /// <summary>
         /// Init Message Printer
         /// </summary>
-        public static void Init() {
-            if (initDone) return;
+        public static void Init()
+        {
+            if (initDone)
+            {
+                return;
+            }
 
-            var settings = ConsoleManager.GetSettings();
-            if (settings == null || !settings.keepTrackOfMessages) {
+            ConsoleSettings settings = ConsoleManager.GetSettings();
+            if (settings == null || !settings.keepTrackOfMessages)
+            {
                 return;
             }
 
@@ -32,7 +37,8 @@ namespace Anarkila.DeveloperConsole {
             initDone = true;
         }
 
-        private static void OnDestroy() {
+        private static void OnDestroy()
+        {
             ConsoleEvents.RegisterDeveloperConsoleLogEvent -= LogEvent;
             ConsoleEvents.RegisterConsoleClearEvent -= ClearEvent;
             Application.quitting -= OnDestroy;
@@ -42,44 +48,51 @@ namespace Anarkila.DeveloperConsole {
 #endif
         }
 
-        private static void ClearEvent() {
+        private static void ClearEvent()
+        {
             messages.Clear();
         }
 
-        private static void LogEvent(string message, Color? arg2) {
-
+        private static void LogEvent(string message, Color? arg2)
+        {
             // Add new messages till maxMessageCount reached
-            if (messages.Count <= maxMessageCount - 1) {
+            if (messages.Count <= maxMessageCount - 1)
+            {
                 messages.Add(message);
             }
             // After that replace message at current index
-            else {
+            else
+            {
                 messages[currentIndex] = message;
             }
 
             ++currentIndex;
 
             // Reset index after maxMessageCount reached
-            if (currentIndex >= maxMessageCount) {
+            if (currentIndex >= maxMessageCount)
+            {
                 currentIndex = 0;
             }
         }
 
-        public static List<string> GetConsoleMessagesList() {
-            if (messages == null) {
+        public static List<string> GetConsoleMessagesList()
+        {
+            if (messages == null)
+            {
                 messages = new List<string>();
             }
 
             return messages;
         }
 
-        public static string[] GetConsoleMessagesArray() {
-            if (messages == null) {
+        public static string[] GetConsoleMessagesArray()
+        {
+            if (messages == null)
+            {
                 messages = new List<string>();
             }
 
             return messages.ToArray();
         }
-
     }
 }

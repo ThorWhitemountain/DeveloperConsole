@@ -1,18 +1,18 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine;
 
-namespace Anarkila.DeveloperConsole {
-
+namespace Anarkila.DeveloperConsole
+{
     /// <summary>
     /// This class handles resizing Developer Console Window on mouse drag
     /// This is disabled for WebGL builds
     /// </summary>
-    #pragma warning disable 0162
-    public class WindowResizer : MonoBehaviour, IPointerDownHandler, IDragHandler {
-
+#pragma warning disable 0162
+    public class WindowResizer : MonoBehaviour, IPointerDownHandler, IDragHandler
+    {
         [SerializeField] private RectTransform rectTransform;
-        [SerializeField] private Vector2 minSize = new Vector2(480, 480);
-        [SerializeField] private Vector2 maxSize = new Vector2(1920, 1080);
+        [SerializeField] private Vector2 minSize = new(480, 480);
+        [SerializeField] private Vector2 maxSize = new(1920, 1080);
 
         private Vector2 previousPointerPosition;
         private Vector2 currentPointerPosition;
@@ -29,9 +29,10 @@ namespace Anarkila.DeveloperConsole {
         private const float maxScaleY = 1f;
 
         private bool forceInsideScreenBounds = true;
-        private bool resetWindowSizeOnEnable = false;
+        private bool resetWindowSizeOnEnable;
 
-        private void Start() {
+        private void Start()
+        {
 #if UNITY_WEBGL
             // Resizing currently works very oddly in WebGL so it's disabled.
             enabled = false;
@@ -39,7 +40,8 @@ namespace Anarkila.DeveloperConsole {
 #endif
             maxSize = new Vector2(Screen.width - 50, Screen.height - 50);
 
-            if (rectTransform != null) {
+            if (rectTransform != null)
+            {
                 defaultSize = rectTransform.localScale;
                 panelHeight = rectTransform.sizeDelta.x;
                 panelWidth = rectTransform.sizeDelta.y;
@@ -49,81 +51,121 @@ namespace Anarkila.DeveloperConsole {
                 ConsoleEvents.RegisterConsoleResetEvent += ResetConsole;
             }
 #if UNITY_EDITOR
-            else {
+            else
+            {
                 Debug.LogError("rectTransform is null! Resizing console window will not work!");
                 enabled = false;
                 return;
             }
 #endif
 
-            var settings = ConsoleManager.GetSettings();
-            if (settings != null) {
+            ConsoleSettings settings = ConsoleManager.GetSettings();
+            if (settings != null)
+            {
                 forceInsideScreenBounds = settings.forceConsoleInsideScreenBounds;
                 resetWindowSizeOnEnable = settings.resetWindowPositionOnEnable;
-                var size = settings.consoleWindowDefaultSize;
+                float size = settings.consoleWindowDefaultSize;
 
-                if (rectTransform != null) {
-                    rectTransform.localScale = new Vector3(rectTransform.localScale.x * size, rectTransform.localScale.y * size, rectTransform.localScale.z);
+                if (rectTransform != null)
+                {
+                    rectTransform.localScale = new Vector3(rectTransform.localScale.x * size,
+                        rectTransform.localScale.y * size, rectTransform.localScale.z);
                     defaultSize = rectTransform.localScale;
                 }
 
-                if (!settings.allowConsoleResize) {
+                if (!settings.allowConsoleResize)
+                {
                     enabled = false;
                     return;
                 }
             }
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             ConsoleEvents.RegisterConsoleResetEvent -= ResetConsole;
         }
 
-        private void OnEnable() {
-            if (resetWindowSizeOnEnable) {
+        private void OnEnable()
+        {
+            if (resetWindowSizeOnEnable)
+            {
                 ResetConsole();
             }
         }
 
-        private void ResetConsole() {
-            if (rectTransform == null) return;
+        private void ResetConsole()
+        {
+            if (rectTransform == null)
+            {
+                return;
+            }
 
             rectTransform.localScale = defaultSize;
         }
 
-        public void OnPointerDown(PointerEventData data) {
-            if (rectTransform == null) return;
+        public void OnPointerDown(PointerEventData data)
+        {
+            if (rectTransform == null)
+            {
+                return;
+            }
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera, out previousPointerPosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera,
+                out previousPointerPosition);
         }
 
-        public void OnDrag(PointerEventData data) {
-            if (rectTransform == null) return;
+        public void OnDrag(PointerEventData data)
+        {
+            if (rectTransform == null)
+            {
+                return;
+            }
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera, out currentPointerPosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera,
+                out currentPointerPosition);
             Vector2 resizeValue = currentPointerPosition - previousPointerPosition;
 
             newSizeDelta += new Vector2(resizeValue.x, -resizeValue.y);
-            newSizeDelta = new Vector2(Mathf.Clamp(newSizeDelta.x, minSize.x, maxSize.x), Mathf.Clamp(newSizeDelta.y, minSize.y, maxSize.y));
+            newSizeDelta = new Vector2(Mathf.Clamp(newSizeDelta.x, minSize.x, maxSize.x),
+                Mathf.Clamp(newSizeDelta.y, minSize.y, maxSize.y));
 
             float previousX = localX;
             float previosY = localY;
 
-            localX *= (newSizeDelta.x / panelHeight);
-            localY *= (newSizeDelta.y / panelWidth);
+            localX *= newSizeDelta.x / panelHeight;
+            localY *= newSizeDelta.y / panelWidth;
 
             previousPointerPosition = currentPointerPosition;
 
-            if (localX >= maxScaleX) localX = maxScaleX;
-            if (localX <= minScaleX) localX = minScaleX;
-            if (localY >= maxScaleY) localY = maxScaleY;
-            if (localY <= minScaleY) localY = minScaleY;
+            if (localX >= maxScaleX)
+            {
+                localX = maxScaleX;
+            }
+
+            if (localX <= minScaleX)
+            {
+                localX = minScaleX;
+            }
+
+            if (localY >= maxScaleY)
+            {
+                localY = maxScaleY;
+            }
+
+            if (localY <= minScaleY)
+            {
+                localY = minScaleY;
+            }
 
             // check that window is still inside screen boounds if forceInsideScreenBounds is set to true
-            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideSreen(rectTransform, 15f)) {
+            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideSreen(rectTransform, 15f))
+            {
                 localX = previousX;
                 localY = previosY;
             }
-            else {
+            else
+            {
                 rectTransform.localScale = new Vector3(localX, localY, rectTransform.localScale.z);
             }
         }

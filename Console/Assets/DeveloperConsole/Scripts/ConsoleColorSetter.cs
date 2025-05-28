@@ -1,53 +1,64 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
-namespace Anarkila.DeveloperConsole {
+namespace Anarkila.DeveloperConsole
+{
+    public class ConsoleColorSetter : MonoBehaviour
+    {
+        [SerializeField] private ColorTarget style = ColorTarget.LargeGUIBackground;
 
-    public class ConsoleColorSetter : MonoBehaviour {
 
-        private enum ColorTarget {
+        private enum ColorTarget
+        {
             LargeGUIBorder,
-            largeGUIBackground,
-            minimalGUIBackground,
-            controlColor,
+            LargeGUIBackground,
+            MinimalGUIBackground,
+            ControlColor,
             LargeGUIScrollbarHandle,
             LargeGUIScrollbarBackground
         }
 
-        [SerializeField] private ColorTarget style = ColorTarget.largeGUIBackground;
-
-        private void Awake() {
+        private void Awake()
+        {
             ConsoleEvents.RegisterConsoleColorsChangedEvent += SetColors;
         }
 
-        private void OnDestroy() {
-            ConsoleEvents.RegisterConsoleColorsChangedEvent -= SetColors;
-        }
-
-        private void Start() {
+        private void Start()
+        {
             SetColors();
         }
 
-        private void SetColors() {
-            var settings = ConsoleManager.GetSettings();
+        private void OnDestroy()
+        {
+            ConsoleEvents.RegisterConsoleColorsChangedEvent -= SetColors;
+        }
 
-            if (settings == null) return;
+        private void SetColors()
+        {
+            ConsoleSettings settings = ConsoleManager.GetSettings();
 
-            if (TryGetComponent(out Image image)) {
-                switch (style) {
+            if (settings == null)
+            {
+                return;
+            }
+
+            if (TryGetComponent(out Image image))
+            {
+                switch (style)
+                {
                     case ColorTarget.LargeGUIBorder:
                         image.color = settings.consoleColors.largeGUIBorderColor;
                         break;
 
-                    case ColorTarget.largeGUIBackground:
+                    case ColorTarget.LargeGUIBackground:
                         image.color = settings.consoleColors.largeGUIBackgroundColor;
                         break;
 
-                    case ColorTarget.minimalGUIBackground:
+                    case ColorTarget.MinimalGUIBackground:
                         image.color = settings.consoleColors.minimalGUIBackgroundColor;
                         break;
 
-                    case ColorTarget.controlColor:
+                    case ColorTarget.ControlColor:
                         image.color = settings.consoleColors.largeGUIControlsColor;
                         break;
 
@@ -61,11 +72,11 @@ namespace Anarkila.DeveloperConsole {
                 }
             }
 #if UNITY_EDITOR
-            else {
+            else
+            {
                 Debug.Log(string.Format("Gameobject {0} doesn't have Image component!", gameObject.name));
                 ConsoleEvents.RegisterConsoleColorsChangedEvent -= SetColors;
                 enabled = false;
-                return;
             }
 #endif
         }

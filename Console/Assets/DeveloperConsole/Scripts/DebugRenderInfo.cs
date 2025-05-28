@@ -3,57 +3,79 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Anarkila.DeveloperConsole {
-
+namespace Anarkila.DeveloperConsole
+{
     /// <summary>
     /// This script collects rendering information in Unity Editor
     /// if 'collectRenderInfoEditor' option is set to true.
     /// To print rendering information to console call 'debug.renderinfo'
     /// </summary>
-    public class DebugRenderInfo : MonoBehaviour {
+    public class DebugRenderInfo : MonoBehaviour
+    {
+        private int HighestTrianglessCount;
+        private int HighestDrawCallsCount;
+        private int HighestVerticesCount;
+        private int HighestBatchesCount;
 
-        private int HighestTrianglessCount = 0;
-        private int HighestDrawCallsCount = 0;
-        private int HighestVerticesCount = 0;
-        private int HighestBatchesCount = 0;
+        private int highestFPS;
+        private float avgFPS;
 
-        private int highestFPS = 0;
-        private float avgFPS = 0f;
-
-        private void Awake() {
-            var settings = ConsoleManager.GetSettings();
-            if (!settings.collectRenderInfoEditor) {
+        private void Awake()
+        {
+            ConsoleSettings settings = ConsoleManager.GetSettings();
+            if (!settings.collectRenderInfoEditor)
+            {
                 Console.RemoveCommand("debug.renderinfo");
-                this.enabled = false;
+                enabled = false;
             }
         }
 
-        private void Update() {
-            var deltaTime = Time.deltaTime;
+        private void Update()
+        {
+            float deltaTime = Time.deltaTime;
 
             // calculate low and high FPS
-            var fps = 1.0f / deltaTime;
-            if (fps > highestFPS) highestFPS = (int)fps;
-    
+            float fps = 1.0f / deltaTime;
+            if (fps > highestFPS)
+            {
+                highestFPS = (int)fps;
+            }
+
             // calculate average FPS
-            avgFPS += ((deltaTime / Time.timeScale) - avgFPS) * 0.03f;
+            avgFPS += (deltaTime / Time.timeScale - avgFPS) * 0.03f;
 
-            if (HighestDrawCallsCount < UnityStats.drawCalls) HighestDrawCallsCount = UnityStats.drawCalls;
-            if (HighestBatchesCount < UnityStats.batches) HighestBatchesCount = UnityStats.batches;
+            if (HighestDrawCallsCount < UnityStats.drawCalls)
+            {
+                HighestDrawCallsCount = UnityStats.drawCalls;
+            }
 
-            if (HighestTrianglessCount < UnityStats.triangles) HighestTrianglessCount = UnityStats.triangles;
-            if (HighestVerticesCount < UnityStats.vertices) HighestVerticesCount = UnityStats.vertices;
+            if (HighestBatchesCount < UnityStats.batches)
+            {
+                HighestBatchesCount = UnityStats.batches;
+            }
+
+            if (HighestTrianglessCount < UnityStats.triangles)
+            {
+                HighestTrianglessCount = UnityStats.triangles;
+            }
+
+            if (HighestVerticesCount < UnityStats.vertices)
+            {
+                HighestVerticesCount = UnityStats.vertices;
+            }
         }
 
         [ConsoleCommand("debug_renderinfo", info: "Print rendering information (Editor only)")]
-        private void PrintRenderInfo() {
-
-            var currentTargetFPS = Application.targetFrameRate;
-            var target = string.Empty;
-            if (currentTargetFPS <= 0) {
+        private void PrintRenderInfo()
+        {
+            int currentTargetFPS = Application.targetFrameRate;
+            string target = string.Empty;
+            if (currentTargetFPS <= 0)
+            {
                 target = ConsoleConstants.UNLIMITED;
-            } 
-            else {
+            }
+            else
+            {
                 target = currentTargetFPS.ToString();
             }
 

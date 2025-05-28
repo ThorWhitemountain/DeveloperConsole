@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System;
 
-public static class ConsoleConstants {
-
+public static class ConsoleConstants
+{
     // Constant strings, don't modify.
 #if UNITY_EDITOR
     public const string EDITORWARNING = "<color=red>Developer Console Editor Warning: </color>";
@@ -33,20 +33,22 @@ public static class ConsoleConstants {
     // Array of all supported parameter types
     // If you want to add types to this list,
     // you need to modify ParameterParser.ParseBuiltInTypes() function.
-    public static Type[] SupportedTypes = {
-            typeof(int),      typeof(float),
-            typeof(decimal),  typeof(double),
-            typeof(bool),     typeof(string),
-            typeof(char),     typeof(string[]),
-            typeof(Vector2),  typeof(Vector3),
-            typeof(Vector4),  typeof(Quaternion)
+    public static Type[] SupportedTypes =
+    {
+        typeof(int), typeof(float),
+        typeof(decimal), typeof(double),
+        typeof(bool), typeof(string),
+        typeof(char), typeof(string[]),
+        typeof(Vector2), typeof(Vector3),
+        typeof(Vector4), typeof(Quaternion)
     };
 
     // Array of supported Unity types
     // If you want to add types to this list,
     // you need to modify ParameterParser.ParseUnityTypes() function.
-    public static Type[] UnityTypes = {
-            typeof(Vector2), typeof(Vector3),
-            typeof(Vector4), typeof(Quaternion)
+    public static Type[] UnityTypes =
+    {
+        typeof(Vector2), typeof(Vector3),
+        typeof(Vector4), typeof(Quaternion)
     };
 }

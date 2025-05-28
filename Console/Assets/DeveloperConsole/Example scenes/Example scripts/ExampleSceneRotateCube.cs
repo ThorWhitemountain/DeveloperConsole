@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Anarkila.DeveloperConsole {
-
-    public class ExampleSceneRotateCube : MonoBehaviour {
-
+namespace Anarkila.DeveloperConsole
+{
+    public class ExampleSceneRotateCube : MonoBehaviour
+    {
         private float degreesPerSecond = 29.0f;
         private float amplitude = 0.5f;
         private float frequency = 1f;
@@ -12,17 +12,20 @@ namespace Anarkila.DeveloperConsole {
         private Vector3 startPosition;
         private Vector3 tempPos;
 
-        private void Awake() {
-            cachedTransform = this.transform;
+        private void Awake()
+        {
+            cachedTransform = transform;
         }
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             startPosition = cachedTransform.position;
         }
 
-        private void Update() {
+        private void Update()
+        {
             // Spin object around Y-Axis
-            var rotation = new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f);
+            Vector3 rotation = new(0f, Time.deltaTime * degreesPerSecond, 0f);
             cachedTransform.Rotate(rotation, Space.World);
 
             // Float up/down
@@ -35,7 +38,8 @@ namespace Anarkila.DeveloperConsole {
         // Multiple instances of same command is allowed.
         // In the example scenes, all 3 cubes get disabled/enabled when this is called.
         [ConsoleCommand("cube_enabled", "false")]
-        private void EnableCubeRotation(bool enabled) {
+        private void EnableCubeRotation(bool enabled)
+        {
             this.enabled = enabled;
         }
     }
