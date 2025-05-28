@@ -22,9 +22,9 @@ Features not needed for SE might be stripped.
 ## Getting Started
 1. Download and import [DeveloperConsole package](https://github.com/anarkila/DeveloperConsole/releases/download/v1.0.2/DeveloperConsole_1.0.2.unitypackage) into your project
 2. Drag & drop DeveloperConsole prefab into your scene
-3a. Add ``[ConsoleCommand()]`` attribute to your methods like below. See [ConsoleExamples.cs](https://github.com/anarkila/DeveloperConsole/blob/main/Console/Assets/DeveloperConsole/Example%20scenes/Example%20scripts/ConsoleExamples.cs) for all examples. 
-3b. Make sure your script is attached to a gameobject in the scene. As monobehaviour scripts not attached to a gameobject won't be picked up.
-4. Play your scene and press ``§`` to toggle Developer Console
+3. Add ``[ConsoleCommand()]`` attribute to your methods like below. See [ConsoleExamples.cs](https://github.com/anarkila/DeveloperConsole/blob/main/Console/Assets/DeveloperConsole/Example%20scenes/Example%20scripts/ConsoleExamples.cs) for all examples. 
+4. Make sure your script is attached to a gameobject in the scene. As monobehaviour scripts not attached to a gameobject won't be picked up.
+5. Play your scene and press ``§`` to toggle Developer Console
 
 ```C#
 using UnityEngine;
