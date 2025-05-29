@@ -249,7 +249,7 @@ namespace Anarkila.DeveloperConsole
                 // TODO: perhaps there should be log if command was right but parameter was wrong?
                 if (!silent && ConsoleManager.PrintUnrecognizedCommandInfo())
                 {
-                    Console.Log(string.Format("Command '{0}' was not recognized.", rawInput));
+                    Console.Log($"Command '{rawInput}' was not recognized.");
                     ++failedCommandCount;
                 }
             }
@@ -427,11 +427,11 @@ namespace Anarkila.DeveloperConsole
             {
                 if (foundAny)
                 {
-                    Console.Log(string.Format("Removed command [{0}]", command));
+                    Console.Log($"Removed command [{command}]");
                 }
                 else
                 {
-                    Console.Log(string.Format("Didn't find command with name [{0}]", command));
+                    Console.Log($"Didn't find command with name [{command}]");
                 }
             }
 #endif
@@ -529,9 +529,8 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
                 // this warning means you have method with [ConsoleCommand(null)] or [ConsoleCommand("")] somewhere.
                 // Below message should print the script and method where this is located.
-                Debug.Log(string.Format(
-                    "{0}{1}.{2} [ConsoleCommand] name is empty or null! Please assign different command name.",
-                    ConsoleConstants.EDITORWARNING, classNameString, methodName));
+                Debug.Log(
+                    $"{ConsoleConstants.EDITORWARNING}{classNameString}.{methodName} [ConsoleCommand] name is empty or null! Please assign different command name.");
 #endif
                 return null;
             }
@@ -543,9 +542,8 @@ namespace Anarkila.DeveloperConsole
                 // [ConsoleCommand()] cannot contain characters '&' or ',' (comma) because
                 // character '&' is used to parse multiple commands
                 // and character ',' (comma) is used to parse multiple parameters
-                Debug.Log(string.Format(
-                    "{0}[ConsoleCommand] cannot contain whitespace, '&' or comma. Rename command [{1}] in {2}{3}",
-                    ConsoleConstants.EDITORWARNING, command, classNameString, methodName));
+                Debug.Log(
+                    $"{ConsoleConstants.EDITORWARNING}[ConsoleCommand] cannot contain whitespace, '&' or comma. Rename command [{command}] in {classNameString}{methodName}");
 #endif
                 return null;
             }
@@ -858,11 +856,10 @@ namespace Anarkila.DeveloperConsole
                         parameters != commands[i].parameters)
                     {
 #if UNITY_EDITOR
-                        Debug.Log(string.Format(ConsoleConstants.EDITORWARNING +
-                                                "Command '{0}' has already been registered. " +
-                                                "Command '{0}' in class '{1}' with method name '{2}' will be ignored. " +
-                                                "Give this attribute other command name!", commandName, className,
-                            methodName));
+                        Debug.Log(ConsoleConstants.EDITORWARNING +
+                                  $"Command '{commandName}' has already been registered. " +
+                                  $"Command '{commandName}' in class '{className}' with method name '{methodName}' will be ignored. " +
+                                  "Give this attribute other command name!");
 #endif
                         found = true;
                     }

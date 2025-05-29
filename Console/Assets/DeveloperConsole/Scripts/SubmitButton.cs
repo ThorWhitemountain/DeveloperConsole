@@ -17,7 +17,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             else
             {
-                Debug.Log(string.Format("Gameobject: {0} doesn't have Button component!", gameObject.name));
+                Debug.Log($"Gameobject: {gameObject.name} doesn't have Button component!");
             }
 #endif
         }

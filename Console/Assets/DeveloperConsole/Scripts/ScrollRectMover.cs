@@ -26,7 +26,7 @@ namespace Anarkila.DeveloperConsole
             else
             {
 #if UNITY_EDITOR
-                Debug.Log(string.Format("Gameobject {0} doesn't have ScrollRect component!", gameObject.name));
+                Debug.Log($"Gameobject {gameObject.name} doesn't have ScrollRect component!");
 #endif
                 ConsoleEvents.RegisterConsoleScrollMoveEvent -= ScrollToBottom;
                 enabled = false;

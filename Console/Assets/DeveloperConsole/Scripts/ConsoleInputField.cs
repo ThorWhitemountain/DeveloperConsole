@@ -34,7 +34,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             else
             {
-                Debug.Log(string.Format("Gameobject {0} doesn't have TMP_InputField component!", gameObject.name));
+                Debug.Log($"Gameobject {gameObject.name} doesn't have TMP_InputField component!");
                 enabled = false;
                 return;
             }

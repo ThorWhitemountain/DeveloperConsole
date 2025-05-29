@@ -58,7 +58,7 @@ namespace Anarkila.DeveloperConsole
             if (index > sceneCount || index < 0)
             {
 #if UNITY_EDITOR
-                Console.Log(string.Format("Scene index: [{0}] doesn't exist!", index));
+                Console.Log($"Scene index: [{index}] doesn't exist!");
 #endif
                 return;
             }
@@ -97,7 +97,7 @@ namespace Anarkila.DeveloperConsole
             else
             {
 #if UNITY_EDITOR
-                Console.Log(string.Format("Scene [{0}] doesn't exist!", sceneName));
+                Console.Log($"Scene [{sceneName}] doesn't exist!");
 #endif
                 return;
             }
@@ -117,7 +117,7 @@ namespace Anarkila.DeveloperConsole
             if (SceneManager.sceneCount == 1)
             {
 #if UNITY_EDITOR
-                Console.Log(string.Format("Can't unload scene [{0}] because it's the only scene active!", index));
+                Console.Log($"Can't unload scene [{index}] because it's the only scene active!");
 #endif
                 return;
             }
@@ -125,7 +125,7 @@ namespace Anarkila.DeveloperConsole
             if (index > SceneManager.sceneCountInBuildSettings || index < 0)
             {
 #if UNITY_EDITOR
-                Console.Log(string.Format("Scene index: [{0}] doesn't exist!", index));
+                Console.Log($"Scene index: [{index}] doesn't exist!");
 #endif
                 return;
             }
@@ -142,7 +142,7 @@ namespace Anarkila.DeveloperConsole
             if (SceneManager.sceneCount == 1)
             {
 #if UNITY_EDITOR
-                Console.Log(string.Format("Can't unload scene [{0}] because it's the only scene active!", sceneName));
+                Console.Log($"Can't unload scene [{sceneName}] because it's the only scene active!");
 #endif
                 return;
             }

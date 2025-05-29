@@ -136,14 +136,14 @@ namespace Anarkila.DeveloperConsole
         private static void PrintSceneInformation()
         {
             Console.LogEmpty();
-            Console.Log("Total Scene Count: " + UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings);
+            Console.Log($"Total Scene Count: {UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings}");
             int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
             for (int i = 0; i < sceneCount; i++)
             {
                 string sceneName =
                     System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility
                         .GetScenePathByBuildIndex(i));
-                string s = "Scene " + i + " Name: ";
+                string s = $"Scene {i} Name: ";
                 Console.Log(s + sceneName);
             }
         }

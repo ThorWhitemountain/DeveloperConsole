@@ -50,7 +50,7 @@ namespace Anarkila.DeveloperConsole
                     long difference = (startTime - playButtonTime) / TimeSpan.TicksPerMillisecond;
                     string sceneName = SceneManager.GetActiveScene().name;
 
-                    Console.Log(string.Format("Scene [{0}] loaded in {1} ms.", sceneName, difference));
+                    Console.Log($"Scene [{sceneName}] loaded in {difference} ms.");
 
                     called = true;
                     break;

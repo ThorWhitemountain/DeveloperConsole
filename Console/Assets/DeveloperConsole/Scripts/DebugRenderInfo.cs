@@ -69,7 +69,7 @@ namespace Anarkila.DeveloperConsole
         private void PrintRenderInfo()
         {
             int currentTargetFPS = Application.targetFrameRate;
-            string target = string.Empty;
+            string target;
             if (currentTargetFPS <= 0)
             {
                 target = ConsoleConstants.UNLIMITED;
@@ -80,13 +80,13 @@ namespace Anarkila.DeveloperConsole
             }
 
             Console.LogEmpty();
-            Debug.Log(string.Format("Current resolution is: {0} x {1}", Screen.width, Screen.height));
-            Debug.Log("Application target frame rate is set to: " + target);
-            Debug.Log(string.Format("Highest FPS: {0} --- Avg FPS: {1}", highestFPS, (int)(1f / avgFPS)));
-            Debug.Log("Highest batches count: " + HighestBatchesCount);
-            Debug.Log("Highest draw call count: " + HighestDrawCallsCount);
-            Debug.Log("Highest vertices count: " + HighestVerticesCount);
-            Debug.Log("Highest triangles count: " + HighestTrianglessCount);
+            Debug.Log($"Current resolution is: {Screen.width} x {Screen.height}");
+            Debug.Log($"Application target frame rate is set to: {target}");
+            Debug.Log($"Highest FPS: {highestFPS} --- Avg FPS: {(int)(1f / avgFPS)}");
+            Debug.Log($"Highest batches count: {HighestBatchesCount}");
+            Debug.Log($"Highest draw call count: {HighestDrawCallsCount}");
+            Debug.Log($"Highest vertices count: {HighestVerticesCount}");
+            Debug.Log($"Highest triangles count: {HighestTrianglessCount}");
             Console.LogEmpty();
         }
     }

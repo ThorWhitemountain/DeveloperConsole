@@ -93,12 +93,12 @@ namespace Anarkila.DeveloperConsole
 
                 if (executedCommandCount != 0)
                 {
-                    Debug.Log(string.Format("Successfully called Console Commands {0} times.", executedCommandCount));
+                    Debug.Log($"Successfully called Console Commands {executedCommandCount} times.");
                 }
 
                 if (failedCommandCount != 0)
                 {
-                    Debug.Log(string.Format("Failed to execute {0} Console Commands.", failedCommandCount));
+                    Debug.Log($"Failed to execute {failedCommandCount} Console Commands.");
                 }
             }
 
@@ -442,12 +442,12 @@ namespace Anarkila.DeveloperConsole
                 {
                     // https://docs.unity3d.com/ScriptReference/SceneManagement.LoadSceneMode.html
                     string additive = mode == LoadSceneMode.Additive ? "(Additive)" : null;
-                    Console.Log(string.Format("Loaded Scene: [{0}] {1}", sceneName, additive));
+                    Console.Log($"Loaded Scene: [{sceneName}] {additive}");
                 }
             }
             else if (!settings.printPlayButtonToSceneTime && settings.printLoadedSceneName)
             {
-                Console.Log(string.Format("Loaded Scene: [{0}]", sceneName));
+                Console.Log($"Loaded Scene: [{sceneName}]");
             }
 
             Stopwatch timer = new();
@@ -500,13 +500,8 @@ namespace Anarkila.DeveloperConsole
                 }
 #endif
                 string message = ConsoleConstants.CONSOLEINIT;
-#if UNITY_WEBGL
-                message += string.Format("Initialization took {0} ms{1}", time, suffix);
+                message += $"Initialization took {time} ms{suffix}";
                 ConsoleEvents.Log(message);
-#else
-                message += string.Format("Initialization took {0} ms{1}", time, suffix);
-                ConsoleEvents.Log(message);
-#endif
             }
 
             if (settings.printStartupHelpText)

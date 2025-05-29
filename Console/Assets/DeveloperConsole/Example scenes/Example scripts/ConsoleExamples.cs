@@ -27,7 +27,7 @@ namespace Anarkila.DeveloperConsole
         //[ConsoleCommand("test_int", hiddenCommand:true)]                  // Hidden command (default false)
         private void TestInt(int i)
         {
-            Debug.Log(string.Format("Called command 'test_int' successfully with value: {0} from Console!", i));
+            Debug.Log($"Called command 'test_int' successfully with value: {i} from Console!");
         }
 
 
@@ -38,7 +38,7 @@ namespace Anarkila.DeveloperConsole
         [ConsoleCommand("test_int_opt")]
         private void TestIntOpt(int i = 0)
         {
-            Debug.Log(string.Format("Called command 'test_int_opt' successfully with value: {0} from Console!", i));
+            Debug.Log($"Called command 'test_int_opt' successfully with value: {i} from Console!");
         }
 
 
@@ -48,8 +48,7 @@ namespace Anarkila.DeveloperConsole
         [ConsoleCommand("test_multi_int", "1, 2")]
         private void TestMultiInt(int i, int j)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_multi_int' successfully with value: {0} and {1} from Console!", i, j));
+            Debug.Log($"Called command 'test_multi_int' successfully with value: {i} and {j} from Console!");
         }
 
         // this command takes two optional ints separated by comma
@@ -60,41 +59,38 @@ namespace Anarkila.DeveloperConsole
         [ConsoleCommand("test_multi_opt")]
         private void TestIntIntOpt(int i = 0, int j = 1)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_multi_opt' successfully with value: {0} and {1} from Console!", i, j));
+            Debug.Log($"Called command 'test_multi_opt' successfully with value: {i} and {j} from Console!");
         }
 
         // This command takes in one float parameter.
         [ConsoleCommand("test_float", "3.7")]
         private void TestFloat(float f)
         {
-            Debug.Log(string.Format("Called command 'test_float' successfully with value: {0} from Console!", f));
+            Debug.Log($"Called command 'test_float' successfully with value: {f} from Console!");
         }
 
         [ConsoleCommand("test_double", "50.3")]
         private void TestDouble(double d)
         {
-            Debug.Log(string.Format("Called command 'test_double' successfully with value: {0} from Console!", d));
+            Debug.Log($"Called command 'test_double' successfully with value: {d} from Console!");
         }
 
         [ConsoleCommand("test_decimal", "12.3")]
         private void TestDecimal(decimal de)
         {
-            Debug.Log(string.Format("Called command 'test_decimal' successfully with value: {0} from Console!", de));
+            Debug.Log($"Called command 'test_decimal' successfully with value: {de} from Console!");
         }
 
         [ConsoleCommand("test_bool", "true")] // Accepted boolean values: true, false, True, False, TRUE, FALSE
         private void TestBool(bool b)
         {
-            Debug.Log(string.Format("Called command 'test_bool' successfully with value: {0} from Developer Console!",
-                b));
+            Debug.Log($"Called command 'test_bool' successfully with value: {b} from Developer Console!");
         }
 
         [ConsoleCommand("test_string", "hello world")]
         private void TestString(string s)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_string' successfully with value: '{0}' from Developer Console!", s));
+            Debug.Log($"Called command 'test_string' successfully with value: '{s}' from Developer Console!");
         }
 
         [ConsoleCommand("test_array", "hello, world")] // Allowed separator: ',' (comma)
@@ -102,15 +98,14 @@ namespace Anarkila.DeveloperConsole
         {
             for (int i = 0; i < stringArray.Length; i++)
             {
-                Debug.Log(string.Format("Array index {0} with value: {1}", i, stringArray[i]));
+                Debug.Log($"Array index {i} with value: {stringArray[i]}");
             }
         }
 
         [ConsoleCommand("test_char")]
         private void TestChar(char c)
         {
-            Debug.Log(string.Format("Called command 'test_char' successfully with value: {0} from Developer Console!",
-                c));
+            Debug.Log($"Called command 'test_char' successfully with value: {c} from Developer Console!");
         }
 
         // Unity Vector2/3/4 and Quaternions can be called like:
@@ -120,29 +115,25 @@ namespace Anarkila.DeveloperConsole
         [ConsoleCommand("test_vector2", "1.0, 2.0")]
         private void TestVector2(Vector2 v)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_vector2' successfully with value: {0} from Developer Console!", v));
+            Debug.Log($"Called command 'test_vector2' successfully with value: {v} from Developer Console!");
         }
 
         [ConsoleCommand("test_vector3", "1.0, 2.0, 3.0")]
         private void TestVector3(Vector3 v)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_vector3' successfully with value: {0} from Developer Console!", v));
+            Debug.Log($"Called command 'test_vector3' successfully with value: {v} from Developer Console!");
         }
 
         [ConsoleCommand("test_vector4", "1.0, 2.0, 3.0, 4.0")]
         private void TestVector4(Vector4 v)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_vector3' successfully with value: {0} from Developer Console!", v));
+            Debug.Log($"Called command 'test_vector3' successfully with value: {v} from Developer Console!");
         }
 
         [ConsoleCommand("test_quaternion", "1.0, 2.0, 3.0, 4.0")]
         private void TestQuaternion(Quaternion q)
         {
-            Debug.Log(string.Format(
-                "Called command 'test_quaternion' successfully with value: {0} from Developer Console!", q));
+            Debug.Log($"Called command 'test_quaternion' successfully with value: {q} from Developer Console!");
         }
 
         // Coroutines can be called just like other commands
@@ -260,8 +251,8 @@ namespace Anarkila.DeveloperConsole
 
         private void ManuallyRegisteredCommandInt(int i)
         {
-            Debug.Log(string.Format(
-                "Called manually registered command 'test_manual_int' successfully with value: {0} from Console!", i));
+            Debug.Log(
+                $"Called manually registered command 'test_manual_int' successfully with value: {i} from Console!");
         }
 
         private IEnumerator ManualCoroutine()

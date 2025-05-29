@@ -24,7 +24,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             else
             {
-                Debug.Log(string.Format("Gameobject {0} doesn't have TMP_Text component!", gameObject.name));
+                Debug.Log($"Gameobject {gameObject.name} doesn't have TMP_Text component!");
             }
 #endif
             cachedTransform = transform;

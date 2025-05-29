@@ -29,10 +29,9 @@ namespace Anarkila.DeveloperConsole
             if (parameters.Length >= 10)
             {
 #if UNITY_EDITOR
-                Debug.Log(string.Format(ConsoleConstants.EDITORWARNING +
-                                        "10 or more parameters is a bit extreme for single method, don't you think? " +
-                                        "Command '{0}' in '{1}' '{2}' will be ignored.", commandName, className,
-                    methodName));
+                Debug.Log(ConsoleConstants.EDITORWARNING +
+                          "10 or more parameters is a bit extreme for single method, don't you think? " +
+                          $"Command '{commandName}' in '{className}' '{methodName}' will be ignored.");
 #endif
                 return false;
             }
@@ -40,10 +39,8 @@ namespace Anarkila.DeveloperConsole
             if (isCoroutine && parameters.Length >= 2)
             {
 #if UNITY_EDITOR
-                Debug.Log(string.Format(ConsoleConstants.EDITORWARNING +
-                                        "Unity coroutines are limited to max one argument. " +
-                                        "Command '{0}' in '{1}' '{2}' will be ignored.", commandName, className,
-                    methodName));
+                Debug.Log(ConsoleConstants.EDITORWARNING + "Unity coroutines are limited to max one argument. " +
+                          $"Command '{commandName}' in '{className}' '{methodName}' will be ignored.");
 #endif
                 return false;
             }
@@ -59,10 +56,9 @@ namespace Anarkila.DeveloperConsole
                         // Multiple parameters with parameters: Vector2/3/4 or string[] is currently not supported
                         // because parameters are parsed by character ',' (comma)
                         // method that takes in single Vector2/3/4 or string[] is supported.
-                        Debug.Log(string.Format(ConsoleConstants.EDITORWARNING +
-                                                "Method contains multiple parameters with {0}, this is not supported! " +
-                                                "Command '{1}' in '{2}' '{3}' will be ignored!",
-                            parameters[i].ParameterType, commandName, className, methodName));
+                        Debug.Log(ConsoleConstants.EDITORWARNING +
+                                  $"Method contains multiple parameters with {parameters[i].ParameterType}, this is not supported! " +
+                                  $"Command '{commandName}' in '{className}' '{methodName}' will be ignored!");
 #endif
                         return false;
                     }
@@ -71,10 +67,9 @@ namespace Anarkila.DeveloperConsole
                 if (!ConsoleConstants.SupportedTypes.Contains(parameters[i].ParameterType))
                 {
 #if UNITY_EDITOR
-                    Debug.Log(string.Format(ConsoleConstants.EDITORWARNING +
-                                            "Parameter typeof {0} is not supported! \n" +
-                                            "Command '{1}' in '{2}' '{3}' will be ignored!",
-                        parameters[i].ParameterType, commandName, className, methodName));
+                    Debug.Log(ConsoleConstants.EDITORWARNING +
+                              $"Parameter typeof {parameters[i].ParameterType} is not supported! \n" +
+                              $"Command '{commandName}' in '{className}' '{methodName}' will be ignored!");
 #endif
                     return false;
                 }

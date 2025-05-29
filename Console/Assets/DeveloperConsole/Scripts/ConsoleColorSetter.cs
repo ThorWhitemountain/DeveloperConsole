@@ -74,7 +74,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             else
             {
-                Debug.Log(string.Format("Gameobject {0} doesn't have Image component!", gameObject.name));
+                Debug.Log($"Gameobject {gameObject.name} doesn't have Image component!");
                 ConsoleEvents.RegisterConsoleColorsChangedEvent -= SetColors;
                 enabled = false;
             }

@@ -106,7 +106,7 @@ namespace Anarkila.DeveloperConsole
             {
                 if (messageCount != 0)
                 {
-                    Debug.Log(string.Format("Debug.Log and Debug.LogError were called {0} times.", messageCount));
+                    Debug.Log($"Debug.Log and Debug.LogError were called {messageCount} times.");
                 }
             }
 
@@ -156,24 +156,20 @@ namespace Anarkila.DeveloperConsole
                     return message;
 
                 case ConsoleLogOptions.LogExceptionWithStackTrace:
-                    return string.Format("{0}{1} {2} {3}", ConsoleConstants.COLOR_RED_START, message, stackTrace,
-                        ConsoleConstants.COLOR_END);
+                    return $"{ConsoleConstants.COLOR_RED_START}{message} {stackTrace} {ConsoleConstants.COLOR_END}";
 
                 case ConsoleLogOptions.LogWithExceptions:
-                    return string.Format("{0}{1} {2}", ConsoleConstants.COLOR_RED_START, message,
-                        ConsoleConstants.COLOR_END);
+                    return $"{ConsoleConstants.COLOR_RED_START}{message} {ConsoleConstants.COLOR_END}";
 
                 case ConsoleLogOptions.LogExceptionsWithStackTraceEditorOnly:
 #if UNITY_EDITOR
-                    return string.Format("{0}{1} {2} {3}", ConsoleConstants.COLOR_RED_START, message, stackTrace,
-                        ConsoleConstants.COLOR_END);
+                    return $"{ConsoleConstants.COLOR_RED_START}{message} {stackTrace} {ConsoleConstants.COLOR_END}";
 #else
                     return null;
 #endif
                 case ConsoleLogOptions.LogWithExceptionsEditorOnly:
 #if UNITY_EDITOR
-                    return string.Format("{0}{1} {2}", ConsoleConstants.COLOR_RED_START, message,
-                        ConsoleConstants.COLOR_END);
+                    return $"{ConsoleConstants.COLOR_RED_START}{message} {ConsoleConstants.COLOR_END}";
 #else
                     return null;
 #endif

@@ -1,7 +1,7 @@
 ﻿using Anarkila.DeveloperConsole;
 using System.Collections.Generic;
 using UnityEngine;
-using System
+using System;
 
 /// <summary>
 /// Simple static class to interact with Developer Console from anywhere
