@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Runtime.CompilerServices;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 using UnityEngine;
+using System;
+using UnityEngine.Profiling;
 
 namespace Anarkila.DeveloperConsole
 {
@@ -29,6 +27,7 @@ namespace Anarkila.DeveloperConsole
         private static bool trackFailedCommands = true;
         private static int executedCommandCount;
         private static int failedCommandCount;
+
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Clear()
@@ -50,8 +49,9 @@ namespace Anarkila.DeveloperConsole
             failedCommandCount = 0;
         }
 #endif
+
         /// <summary>
-        ///     Try to execute console command
+        /// Try to execute console command
         /// </summary>
         public static bool TryExecuteCommand(string input)
         {
@@ -260,7 +260,7 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Parse multiple commands separated by "&" or "&&"
+        /// Parse multiple commands separated by "&" or "&&"
         /// </summary>
         private static List<string> ParseMultipleCommands(string input)
         {
@@ -299,13 +299,13 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Register new Console command
+        /// Register new Console command
         /// </summary>
         public static void RegisterCommand(MonoBehaviour script, string methodName, string command,
             string defaultValue = "", string info = "",
             bool debugCommandOnly = false, bool isHiddenCommand = false, bool hiddenCommandMinimalGUI = false)
         {
-            if (!ConsoleManager.IsRunningOnMainThread(Thread.CurrentThread))
+            if (!ConsoleManager.IsRunningOnMainThread(System.Threading.Thread.CurrentThread))
             {
 #if UNITY_EDITOR
                 Debug.Log(ConsoleConstants.EDITORWARNING +
@@ -374,11 +374,11 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Remove command
+        /// Remove command
         /// </summary>
         public static void RemoveCommand(string command, bool log = false, bool forceDelete = false)
         {
-            if (!ConsoleManager.IsRunningOnMainThread(Thread.CurrentThread))
+            if (!ConsoleManager.IsRunningOnMainThread(System.Threading.Thread.CurrentThread))
             {
 #if UNITY_EDITOR
                 Debug.Log(
@@ -440,10 +440,10 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Get all [ConsoleCommand()] attributes
+        /// Get all [ConsoleCommand()] attributes
         /// </summary>
         public static List<ConsoleCommandData> GetConsoleCommandAttributes(bool isDebugBuild, bool staticOnly,
-            bool scanAllAssemblies = false)
+            bool scanAllAssemblies = false, string projectAssemblyPrefix = "")
         {
             ConsoleCommands.Clear();
 
@@ -461,7 +461,9 @@ namespace Anarkila.DeveloperConsole
             }
 
             List<ConsoleCommandData> commandList = new(64);
-            List<MethodInfo> methods = GetAllAttributesFromAssembly(flags, scanAllAssemblies);
+            Profiler.BeginSample("GetAllAttributesFromAssembly");
+            List<MethodInfo> methods = GetAllAttributesFromAssembly(flags, scanAllAssemblies, projectAssemblyPrefix);
+            Profiler.EndSample();
 
             // Loop through all methods with [ConsoleCommand()] attributes
             foreach (MethodInfo method in methods)
@@ -504,12 +506,11 @@ namespace Anarkila.DeveloperConsole
             }
 
             staticCommandsCached = true;
-
             return commandList;
         }
 
         /// <summary>
-        ///     Create ConsoleCommandData data.
+        /// Create ConsoleCommandData data.
         /// </summary>
         private static ConsoleCommandData CreateCommandData(MethodInfo methodInfo, MonoBehaviour script,
             string methodName, string command, string defaultValue, string info, bool isHiddenCommand,
@@ -583,79 +584,48 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Get all ConsoleCommand attributes from assembly
+        /// Get all ConsoleCommand attributes from assembly
         /// </summary>
-        private static List<MethodInfo> GetAllAttributesFromAssembly(BindingFlags flags, bool scanAllAssemblies = false)
+        private static List<MethodInfo> GetAllAttributesFromAssembly(BindingFlags flags, bool scanAllAssemblies = false,
+            string projectAssemblyPrefix = "")
         {
-            List<MethodInfo> attributeMethodInfos = new(64);
-            ConcurrentBag<MethodInfo> cb = new();
-            bool parallel = true;
+            List<MethodInfo> cb = new();
 
-#if UNITY_WEBGL
-            // WebGL doesn't support Parallel.For
-            parallel = false;
-#endif
             // Looping through all assemblies is slow
             if (scanAllAssemblies)
             {
                 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                for (int i = 0; i < assemblies.Length; i++)
+                {
+                    if (!assemblies[i].FullName.Contains(projectAssemblyPrefix))
+                    {
+                        continue;
+                    }
 
-                if (parallel)
-                {
-                    Parallel.For(0, assemblies.Length, i =>
+                    Type[] types = assemblies[i].GetTypes();
+                    for (int j = 0; j < types.Length; j++)
                     {
-                        Type[] type = assemblies[i].GetTypes();
-                        for (int j = 0; j < type.Length; j++)
-                        {
-                            FindAttributeAndAdd(flags, j, type, cb);
-                        }
-                    });
-                }
-                else
-                {
-                    for (int i = 0; i < assemblies.Length; i++)
-                    {
-                        Type[] type = assemblies[i].GetTypes();
-                        for (int j = 0; j < type.Length; j++)
-                        {
-                            FindAttributeAndAdd(flags, j, type, cb);
-                        }
+                        FindAttributeAndAdd(flags, j, types, cb);
                     }
                 }
             }
-
-            // else loop through current assembly which should be Unity assembly
             else
             {
+                // else loop through current assembly which should be Unity assembly
                 Assembly unityAssembly = Assembly.GetExecutingAssembly();
                 Type[] types = unityAssembly.GetTypes();
 
-                // For small projects, it's faster to just use single threaded loop
-                if (types.Length <= 100)
+                for (int i = 0; i < types.Length; i++)
                 {
-                    parallel = false;
-                }
-
-                if (parallel)
-                {
-                    Parallel.For(0, types.Length, i => { FindAttributeAndAdd(flags, i, types, cb); });
-                }
-                else
-                {
-                    for (int i = 0; i < types.Length; i++)
-                    {
-                        FindAttributeAndAdd(flags, i, types, cb);
-                    }
+                    FindAttributeAndAdd(flags, i, types, cb);
                 }
             }
 
-            attributeMethodInfos = cb.ToList();
-
-            return attributeMethodInfos;
+            return cb;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void FindAttributeAndAdd(BindingFlags flags, int j, Type[] type, ConcurrentBag<MethodInfo> cb)
+        private static void FindAttributeAndAdd(BindingFlags flags, int j, Type[] type, List<MethodInfo> cb)
         {
             if (!type[j].IsClass)
             {
@@ -663,11 +633,6 @@ namespace Anarkila.DeveloperConsole
             }
 
             MethodInfo[] methodInfos = type[j].GetMethods(flags);
-            if (methodInfos.Length == 0)
-            {
-                return;
-            }
-
             for (int i = 0; i < methodInfos.Length; i++)
             {
                 if (methodInfos[i].GetCustomAttributes(typeof(ConsoleCommand), false).Length > 0)
@@ -678,7 +643,7 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Register MonoBehaviour commands
+        /// Register MonoBehaviour commands
         /// </summary>
         public static void RegisterMonoBehaviourCommands(List<ConsoleCommandData> commands)
         {
@@ -710,7 +675,6 @@ namespace Anarkila.DeveloperConsole
                 }
 
                 MonoBehaviour[] monoScripts = GameObject.FindObjectsOfType(type) as MonoBehaviour[];
-
                 for (int j = 0; j < monoScripts.Length; j++)
                 {
                     if (monoScripts[j] == null)
@@ -748,8 +712,7 @@ namespace Anarkila.DeveloperConsole
             // Add static commands to final console command list
             ConsoleCommands.AddRange(StaticCommands);
 
-            // If user called Console.RegisterCommand before console was fully initilized
-            // Add those commands now.
+            // If user called Console.RegisterCommand before console was fully initialized, Add those commands now.
             if (ConsoleCommandsRegisteredBeforeInit.Count != 0)
             {
                 for (int i = 0; i < ConsoleCommandsRegisteredBeforeInit.Count; i++)
@@ -783,7 +746,7 @@ namespace Anarkila.DeveloperConsole
         }
 
         /// <summary>
-        ///     Generate needed console lists
+        /// Generate needed console lists
         /// </summary>
         public static void UpdateLists()
         {
@@ -852,28 +815,30 @@ namespace Anarkila.DeveloperConsole
         {
             ConsoleSettings settings = ConsoleManager.GetSettings();
 
-            if (settings != null)
+            if (settings == null)
             {
-                List<string> commands = settings.printCommandInfoTexts
-                    ? GetConsoleCommandsWithInfos()
-                    : GetConsoleCommandList();
+                return;
+            }
 
-                if (settings.printCommandsAlphabeticalOrder)
-                {
-                    commands = commands.OrderBy(x => x).ToList();
-                }
+            List<string> commands = settings.printCommandInfoTexts
+                ? GetConsoleCommandsWithInfos()
+                : GetConsoleCommandList();
 
-                Console.LogEmpty();
-                ConsoleEvents.Log(ConsoleConstants.COMMANDMESSAGE);
-                for (int i = 0; i < commands.Count; i++)
-                {
-                    ConsoleEvents.Log(commands[i]);
-                }
+            if (settings.printCommandsAlphabeticalOrder)
+            {
+                commands = commands.OrderBy(x => x).ToList();
+            }
+
+            Console.LogEmpty();
+            ConsoleEvents.Log(ConsoleConstants.COMMANDMESSAGE, logType: LogType.Log);
+            for (int i = 0; i < commands.Count; i++)
+            {
+                ConsoleEvents.Log(commands[i], logType: LogType.Log);
             }
         }
 
         /// <summary>
-        ///     Check that list doesn't already contain command that we are trying to register.
+        /// Check that list doesn't already contain command that we are trying to register.
         /// </summary>
         private static bool CheckForDuplicates(List<ConsoleCommandData> commands, Type[] parameters, string commandName,
             string className, string methodName)

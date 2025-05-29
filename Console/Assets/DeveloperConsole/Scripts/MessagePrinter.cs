@@ -62,8 +62,8 @@ namespace Anarkila.DeveloperConsole
             {
                 for (int i = 0; i < messagesBeforeInitDone.Count; i++)
                 {
-                    ConsoleEvents.Log(messagesBeforeInitDone[i].message, messagesBeforeInitDone[i].messageColor,
-                        true);
+                    ConsoleEvents.Log(messagesBeforeInitDone[i].message, messagesBeforeInitDone[i].messageColor, true,
+                        LogType.Log);
                 }
 
                 messagesBeforeInitDone.Clear();
@@ -197,9 +197,14 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
+            if (settings.UnityLogOption == ConsoleLogOptions.LogInfoOnly && logType != LogType.Log)
+            {
+                return;
+            }
+
             if (appendStackTrace)
             {
-                if (logType == LogType.Error || logType == LogType.Exception)
+                if (logType is LogType.Error or LogType.Exception)
                 {
                     text = AppendStrackTrace(text, stackTrace, settings.UnityLogOption);
                 }

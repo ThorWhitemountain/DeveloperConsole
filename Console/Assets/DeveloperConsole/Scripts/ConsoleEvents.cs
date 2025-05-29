@@ -76,17 +76,18 @@ namespace Anarkila.DeveloperConsole
 
         public static event Action<string, Color?> RegisterDeveloperConsoleLogEvent;
 
-        public static void Log(string text, Color? textColor = null, bool forceIgnoreTimeStamp = false)
+        public static void Log(string text, Color? textColor = null, bool forceIgnoreTimeStamp = false,
+            LogType logType = LogType.Error)
         {
-            MessagePrinter.PrintLog(text, RegisterDeveloperConsoleLogEvent, textColor, false,
+            MessagePrinter.PrintLog(text, RegisterDeveloperConsoleLogEvent, textColor, false, logType,
                 forceIgnoreTimestamp: forceIgnoreTimeStamp);
         }
 
         public static void UnityLog(string text, string stacktrace, LogType type, Color? textColor = null,
             bool forceIgnoreTimeStamp = false)
         {
-            MessagePrinter.PrintLog(text, RegisterDeveloperConsoleLogEvent,
-                textColor, true, type, stacktrace, forceIgnoreTimeStamp);
+            MessagePrinter.PrintLog(text, RegisterDeveloperConsoleLogEvent, textColor, true, type, stacktrace,
+                forceIgnoreTimeStamp);
         }
 
         public static event Action<List<string>> RegisterConsolePredictionEvent;

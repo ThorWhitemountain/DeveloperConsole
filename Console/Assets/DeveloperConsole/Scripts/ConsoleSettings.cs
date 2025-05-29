@@ -58,6 +58,10 @@ namespace Anarkila.DeveloperConsole
             "To register MonoBehaviour commands use Console.RegisterCommand() method.")]
         public bool registerStaticCommandsOnly;
 
+        [Header(
+            "Used together with 'scanAllAssemblies' to reduce the assembly count and improve startup performance when scanning all assemblies")]
+        public string projectAssemblyPrefix = "";
+
         [Tooltip(
             "Whether to look for all C# assemblies for Console Commands. Enabling this increases the Initialization a lot, from ~20 ms to ~1500 ms.")]
         public bool scanAllAssemblies;
@@ -298,5 +302,7 @@ public enum ConsoleLogOptions
     // Print expections with stack trace to Console such as
     // "UnityException: Transform child out of bounds YourScript.Start () (at Assets/Example/ExampleScene/YourScript.cs:42)"
     // In Editor and Build!
-    LogExceptionWithStackTrace
+    LogExceptionWithStackTrace,
+
+    LogInfoOnly
 }

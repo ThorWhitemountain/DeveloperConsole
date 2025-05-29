@@ -1,47 +1,45 @@
-﻿using System;
+﻿using Anarkila.DeveloperConsole;
 using System.Collections.Generic;
-using Anarkila.DeveloperConsole;
 using UnityEngine;
-
-// Developer Console namespace
+using System
 
 /// <summary>
-///     Simple static class to interact with Developer Console from anywhere
+/// Simple static class to interact with Developer Console from anywhere
 /// </summary>
 public static class Console
 {
     /// <summary>
-    ///     Log message directly into Developer Console window
+    /// Log message directly into Developer Console window
     /// </summary>
     /// <param name="message">Message to print</param>
     /// <param name="textColor">Text color</param>
     /// <param name="forceIgnoreTimestamp">force ignore timestamp</param>
     public static void Log(string message, Color? textColor = null, bool forceIgnoreTimestamp = false)
     {
-        ConsoleEvents.Log(message, textColor, forceIgnoreTimestamp);
+        ConsoleEvents.Log(message, textColor, forceIgnoreTimestamp, LogType.Log);
     }
 
     /// <summary>
-    ///     Log message directly into Developer Console window
+    /// Log message directly into Developer Console window
     /// </summary>
     /// <param name="message">Message to print</param>
     /// <param name="textColor">Text color</param>
     /// <param name="forceIgnoreTimestamp">force ignore timestamp</param>
     public static void Log(object message, Color? textColor = null, bool forceIgnoreTimestamp = false)
     {
-        ConsoleEvents.Log(message.ToString(), textColor, forceIgnoreTimestamp);
+        ConsoleEvents.Log(message.ToString(), textColor, forceIgnoreTimestamp, LogType.Log);
     }
 
     /// <summary>
-    ///     Log empty message without timestamp
+    /// Log empty message without timestamp
     /// </summary>
     public static void LogEmpty()
     {
-        ConsoleEvents.Log(ConsoleConstants.SPACE, forceIgnoreTimeStamp: true);
+        ConsoleEvents.Log(ConsoleConstants.SPACE, forceIgnoreTimeStamp: true, logType: LogType.Log);
     }
 
     /// <summary>
-    ///     Register new command
+    /// Register new command
     /// </summary>
     /// <param name="script">Reference to Monobehaviour</param>
     /// <param name="methodName">method name as string</param>
@@ -55,8 +53,8 @@ public static class Console
     }
 
     /// <summary>
-    ///     Remove command
-    ///     If there's multiple instances of the same command, all of them will be removed.
+    /// Remove command
+    /// If there's multiple instances of the same command, all of them will be removed.
     /// </summary>
     /// <param name="commandToRemove">Command to remove</param>
     /// <param name="logResult">Log result to console (Editor only)</param>
@@ -66,7 +64,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Execute console command
+    /// Execute console command
     /// </summary>
     /// <param name="command">Command and its parameter(s)</param>
     public static void ExecuteCommand(string command)
@@ -75,7 +73,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get Console state
+    /// Get Console state
     /// </summary>
     /// <returns>boolean</returns>
     public static bool IsConsoleOpen()
@@ -84,8 +82,8 @@ public static class Console
     }
 
     /// <summary>
-    ///     Is Console fully initilized.
-    ///     Initializing takes ~1-2 seconds after scene load.
+    /// Is Console fully initilized.
+    /// Initializing takes ~1-2 seconds after scene load.
     /// </summary>
     /// <returns>boolean</returns>
     public static bool IsConsoleInitialized()
@@ -94,7 +92,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Open Console
+    /// Open Console
     /// </summary>
     public static void OpenConsole()
     {
@@ -102,7 +100,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Close Console
+    /// Close Console
     /// </summary>
     public static void CloseConsole()
     {
@@ -110,7 +108,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set Console state directly.
+    /// Set Console state directly.
     /// </summary>
     public static void SetConsoleState(bool state)
     {
@@ -118,7 +116,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Returns whether Developer Console is enabled and can be opened
+    /// Returns whether Developer Console is enabled and can be opened
     /// </summary>
     public static bool IsConsoleEnabled()
     {
@@ -126,7 +124,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Enable Developer Console
+    /// Enable Developer Console
     /// </summary>
     public static void EnableConsole()
     {
@@ -134,9 +132,9 @@ public static class Console
     }
 
     /// <summary>
-    ///     Disable Developer Console.
-    ///     If console is open, it will be closed.
-    ///     To Enable Console again, call Console.EnableConsole() or Console.SetConsoleEnabledState(true).
+    /// Disable Developer Console.
+    /// If console is open, it will be closed.
+    /// To Enable Console again, call Console.EnableConsole() or Console.SetConsoleEnabledState(true).
     /// </summary>
     public static void DisableConsole()
     {
@@ -145,7 +143,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set Developer Console enabled state
+    /// Set Developer Console enabled state
     /// </summary>
     public static void SetConsoleEnabledState(bool enabled)
     {
@@ -153,9 +151,9 @@ public static class Console
     }
 
     /// <summary>
-    ///     enable/disable listening default Console activator key input.
-    ///     If disabled Developer Console doesn't handle opening or closing Console.
-    ///     Only use this if you plan to handle opening/closing console yourself.
+    /// enable/disable listening default Console activator key input.
+    /// If disabled Developer Console doesn't handle opening or closing Console.
+    /// Only use this if you plan to handle opening/closing console yourself.
     /// </summary>
     public static void AllowConsoleActivateKey(bool enabled)
     {
@@ -163,7 +161,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Clear all console messages
+    /// Clear all console messages
     /// </summary>
     public static void ClearConsoleMessages()
     {
@@ -171,7 +169,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Rebind console activator to new key (Default: § / ½ - KeyCode.Backslash)
+    /// Rebind console activator to new key (Default: § / ½ - KeyCode.Backslash)
     /// </summary>
     /// <param name="newKey">New keycode</param>
     public static void RebindConsoleActivateKey(KeyCode newKey)
@@ -180,7 +178,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Destroy Console Gameobject from the scene.
+    /// Destroy Console Gameobject from the scene.
     /// </summary>
     /// <param name="time">Delay time</param>
     public static void DestroyConsole(float time = 0.0f)
@@ -189,7 +187,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Reset Console window size and position
+    /// Reset Console window size and position
     /// </summary>
     public static void ResetConsole()
     {
@@ -197,7 +195,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Should show input predictions
+    /// Should show input predictions
     /// </summary>
     public static void ShowInputPredictions(bool showPredictions)
     {
@@ -205,7 +203,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Disable logging all Unity Debug.Log/LogError messages to console.
+    /// Disable logging all Unity Debug.Log/LogError messages to console.
     /// </summary>
     public static void DisableUnityMessageLogging()
     {
@@ -214,7 +212,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get current ConsoleLogOptions option for Debug.Log/LogError messages
+    /// Get current ConsoleLogOptions option for Debug.Log/LogError messages
     /// </summary>
     public static ConsoleLogOptions GetCurrentUnityLogOption(ConsoleLogOptions logOption)
     {
@@ -222,7 +220,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Change Unity Debug.Log/LogError options.
+    /// Change Unity Debug.Log/LogError options.
     /// </summary>
     public static void ChangeUnityLogOptions(ConsoleLogOptions logOption)
     {
@@ -230,8 +228,8 @@ public static class Console
     }
 
     /// <summary>
-    ///     Change Unity Debug.Log/LogError options
-    ///     that came from other than Unity main thread.
+    /// Change Unity Debug.Log/LogError options 
+    /// that came from other than Unity main thread.
     /// </summary>
     public static void ChangeThreadedUnityLogOptions(ConsoleLogOptions logOption)
     {
@@ -239,7 +237,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get current ConsoleLogOptions option for threaded Debug.Log/LogError messages
+    /// Get current ConsoleLogOptions option for threaded Debug.Log/LogError messages
     /// </summary>
     public static ConsoleLogOptions GetCurrentThreadedUnityLogOption(ConsoleLogOptions logOption)
     {
@@ -247,7 +245,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set new Console settings
+    /// Set new Console settings
     /// </summary>
     public static void SetSettings(ConsoleSettings newSettings)
     {
@@ -255,7 +253,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get current Console settings
+    /// Get current Console settings
     /// </summary>
     public static ConsoleSettings GetSettings()
     {
@@ -263,7 +261,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get current Console GUI style
+    /// Get current Console GUI style
     /// </summary>
     public static ConsoleGUIStyle GetGUIStyle()
     {
@@ -271,7 +269,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set Console GUI style
+    /// Set Console GUI style
     /// </summary>
     public static void SetGUIStyle(ConsoleGUIStyle style)
     {
@@ -279,7 +277,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set Console GUI Theme
+    /// Set Console GUI Theme
     /// </summary>
     public static void SetGUITheme(ConsoleGUITheme theme)
     {
@@ -295,7 +293,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Set custom GUI colors
+    /// Set custom GUI colors
     /// </summary>
     /// <param name="newColors">ConsoleColors class</param>
     public static void SetCustomGUITheme(ConsoleColors newColors)
@@ -304,7 +302,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get list of all current Console Commands
+    /// Get list of all current Console Commands
     /// </summary>
     /// <returns>returns list of all current console commands</returns>
     public static List<string> GetAllConsoleCommands()
@@ -313,7 +311,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get Console command count
+    /// Get Console command count
     /// </summary>
     public static int GetConsoleCommandsCount()
     {
@@ -321,7 +319,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get static Console command count
+    /// Get static Console command count
     /// </summary>
     public static int GetStaticConsoleCommandsCount()
     {
@@ -329,7 +327,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get list of all current Console Commands with info texts
+    /// Get list of all current Console Commands with info texts
     /// </summary>
     /// <returns>returns list of all current console commands with infos</returns>
     public static List<string> GetAllConsoleCommandsWithInfos()
@@ -338,7 +336,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get all current Console messages as string array.
+    /// Get all current Console messages as string array.
     /// </summary>
     public static string[] GetConsoleMessagesArray()
     {
@@ -346,7 +344,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Get all current Console messages as list of strings.
+    /// Get all current Console messages as list of strings.
     /// </summary>
     public static List<string> GetConsoleMessagesList()
     {
@@ -354,7 +352,7 @@ public static class Console
     }
 
     /// <summary>
-    ///     Write all current Console messages to .txt file
+    /// Write all current Console messages to .txt file
     /// </summary>
     public static void WriteMessagesToFile()
     {
@@ -362,12 +360,12 @@ public static class Console
     }
 
     /// <summary>
-    ///     Register to receive Developer Console state change event
+    /// Register to receive Developer Console state change event
     /// </summary>
     public static event Action<bool> RegisterConsoleStateChangeEvent;
 
     /// <summary>
-    ///     Register to receive Developer Console initialized event
+    /// Register to receive Developer Console initialized event
     /// </summary>
     public static event Action RegisterConsoleInitializedEvent;
 
