@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -127,8 +128,20 @@ namespace Anarkila.DeveloperConsole
                 CreateTextFileUtility.GenerateCommandList();
             }
 
-            // Show 'Next GUI theme button' when playing in Editor
-            if (Application.isPlaying) {
+            GUILayout.Space(10);
+            input = GUILayout.TextField(input, 1);
+            GUILayout.Space(5);
+            if (GUILayout.Button("Get keycode from character", GUILayout.Height(30)))
+            {
+                if (string.IsNullOrEmpty(input))
+                {
+                    Debug.Log("Input is empty.");
+                    input = "";
+                }
+
+                PrintKeyCodeEquivalent(input);
+            }
+
 
             // Show 'Next GUI theme button' when playing in Editor
             if (Application.isPlaying)
@@ -154,7 +167,22 @@ namespace Anarkila.DeveloperConsole
             }
         }
 
-        private void RenderAll() {
+        private static void PrintKeyCodeEquivalent(string input)
+        {
+            Debug.Log($"Input: '{input}'");
+            if (string.IsNullOrEmpty(input))
+            {
+                return;
+            }
+
+            char key = input[0];
+            KeyCode code = (KeyCode)Enum.Parse(typeof(KeyCode), ((int)key).ToString(), true);
+            Debug.Log(
+                $"Keycode is : 'Keycode.{code}' - If you see a number it means the Keycode enum is missing that key");
+        }
+
+        private void RenderAll()
+        {
             RenderGUISettings();
             RenderGeneralSettings();
             RenderKeybindingSettings();
