@@ -129,16 +129,16 @@ namespace Anarkila.DeveloperConsole
             }
 
             GUILayout.Space(10);
+            if (string.IsNullOrEmpty(input))
+            {
+                Debug.Log("Input is empty.");
+                input = "";
+            }
+
             input = GUILayout.TextField(input, 1);
             GUILayout.Space(5);
             if (GUILayout.Button("Get keycode from character", GUILayout.Height(30)))
             {
-                if (string.IsNullOrEmpty(input))
-                {
-                    Debug.Log("Input is empty.");
-                    input = "";
-                }
-
                 PrintKeyCodeEquivalent(input);
             }
 
