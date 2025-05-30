@@ -54,7 +54,7 @@ public class ExampleScript : MonoBehaviour {
 
 ## Features
 
-- Call static, non-static and Unity Coroutines methods (both public and private)
+- Call static, non-static and Unity Coroutines methods (both public and private) (Use [[Preserve]](https://docs.unity3d.com/ScriptReference/Scripting.PreserveAttribute.html) if Unity is stripping your methods)
 - No parameter and optional parameter(s) support
 - Single parameter support with following types:
     - int, float, string, bool, double, char, string[], Vector2, Vector3, Vector4, Quaternion

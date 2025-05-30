@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Anarkila.DeveloperConsole
 {
@@ -6,12 +7,14 @@ namespace Anarkila.DeveloperConsole
     /// This class implements default Developer Console commands
     /// Feel free to modify or delete these as you wish
     /// </summary>
+    [Preserve]
     public static class DefaultCommands
     {
         /// <summary>
         /// Print all available console commands
         /// </summary>
         [ConsoleCommand("help", info: "Print all available commands", hiddenCommandMinimalGUI: true)]
+        [Preserve]
         private static void Help()
         {
             CommandDatabase.PrintAllCommands();
@@ -21,6 +24,7 @@ namespace Anarkila.DeveloperConsole
         /// Quit Application
         /// </summary>
         [ConsoleCommand("quit", info: "Quit application")]
+        [Preserve]
         private static void QuitApplication()
         {
 #if UNITY_EDITOR
@@ -34,6 +38,7 @@ namespace Anarkila.DeveloperConsole
         /// Close console
         /// </summary>
         [ConsoleCommand("close", info: "Close Console")]
+        [Preserve]
         private static void CloseDeveloperConsole()
         {
             ConsoleEvents.CloseConsole();
@@ -45,6 +50,7 @@ namespace Anarkila.DeveloperConsole
         /// Though it's faster to just call: Console.OpenConsole();
         /// </summary>
         [ConsoleCommand("open", hiddenCommand: true)]
+        [Preserve]
         private static void OpenConsole()
         {
             ConsoleEvents.OpenConsole();
@@ -54,6 +60,7 @@ namespace Anarkila.DeveloperConsole
         /// Clear all console messages
         /// </summary>
         [ConsoleCommand("clear", info: "Clear all messages")]
+        [Preserve]
         private static void ClearAllDeveloperConsoleMessages()
         {
             ConsoleEvents.ClearConsoleMessages();
@@ -63,6 +70,7 @@ namespace Anarkila.DeveloperConsole
         /// Reset Console window size and position
         /// </summary>
         [ConsoleCommand("reset", hiddenCommandMinimalGUI: true, info: "Reset Console window size and position")]
+        [Preserve]
         private static void ResetDeveloperConsole()
         {
             ConsoleEvents.ResetConsole();
@@ -73,6 +81,7 @@ namespace Anarkila.DeveloperConsole
         /// Set application target frame rate
         /// </summary>
         [ConsoleCommand("max_fps", info: "Set application target frame rate")]
+        [Preserve]
         private static void SetTargetFrameRate(int fps)
         {
             Application.targetFrameRate = fps;
@@ -88,6 +97,7 @@ namespace Anarkila.DeveloperConsole
         /// Scenes must be included in 'Scenes in build' in the Build settings!
         /// </summary>
         [ConsoleCommand("scene_loadindex", "1", debugOnlyCommand: true, info: "Load scene by index")]
+        [Preserve]
         private static void LoadSceneByIndexSingle(int index)
         {
             ConsoleEvents.LoadSceneByIndexSingle(index);
@@ -97,6 +107,7 @@ namespace Anarkila.DeveloperConsole
         /// Load scene by build name
         /// </summary>
         [ConsoleCommand("scene_loadname", debugOnlyCommand: true, info: "Load scene by name")]
+        [Preserve]
         private static void LoadSceneByName(string sceneName)
         {
             ConsoleEvents.LoadSceneByName(sceneName);
@@ -106,6 +117,7 @@ namespace Anarkila.DeveloperConsole
         /// Load scene additively by build index
         /// </summary>
         [ConsoleCommand("scene_addloadindex", "2", debugOnlyCommand: true, info: "Load scene by index additive")]
+        [Preserve]
         private static void LoadSceneByIndexAdditive(int index)
         {
             ConsoleEvents.LoadSceneByIndexAdditive(index);
@@ -115,6 +127,7 @@ namespace Anarkila.DeveloperConsole
         /// Load scene by build name
         /// </summary>
         [ConsoleCommand("scene_unloadname", debugOnlyCommand: true, info: "Unload scene by name")]
+        [Preserve]
         private static void UnLoadSceneByName(string sceneName)
         {
             ConsoleEvents.UnLoadSceneByName(sceneName);
@@ -124,6 +137,7 @@ namespace Anarkila.DeveloperConsole
         /// Unload scene by build index
         /// </summary>
         [ConsoleCommand("scene_unloadindex", debugOnlyCommand: true, info: "Unload scene by index")]
+        [Preserve]
         private static void UnLoadSceneByIndex(int index)
         {
             ConsoleEvents.UnloadSceneByIndex(index);
@@ -133,6 +147,7 @@ namespace Anarkila.DeveloperConsole
         /// Print scene information
         /// </summary>
         [ConsoleCommand("scene_information", info: "Print Scene information", debugOnlyCommand: true)]
+        [Preserve]
         private static void PrintSceneInformation()
         {
             Console.LogEmpty();
@@ -154,12 +169,14 @@ namespace Anarkila.DeveloperConsole
         /// Console.LogEmpty();
         /// </summary>
         [ConsoleCommand("empty", info: "Print empty line", debugOnlyCommand: true)]
+        [Preserve]
         private static void LogEmpty()
         {
             Console.LogEmpty();
         }
 
         [ConsoleCommand("log_to_file", info: "Log all current messages to file", debugOnlyCommand: true)]
+        [Preserve]
         private static void LogMessagesToFile()
         {
             Console.WriteMessagesToFile();
