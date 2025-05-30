@@ -99,21 +99,20 @@ namespace Anarkila.DeveloperConsole
 
         private void OnValidate()
         {
-            // In the editor, check EventSystem component exists in the scene.
-            // Otherwise UI inputs cannot be received.
-            EventSystem eventSystem = FindObjectOfType<EventSystem>();
-            if (eventSystem == null)
+            // In the editor, check EventSystem component exists in the scene. Otherwise, UI inputs cannot be received.
+            EventSystem eventSystem = (EventSystem)FindFirstObjectByType(typeof(EventSystem));
+            if (eventSystem != null)
             {
-                Debug.Log(
-                    "Did not find EventSystem in the current scene. EventSystem has been added to current scene.");
-
-                // Create new GameObject and add EventSystem and StandaloneInputModule components to it.
-                GameObject eventSystemGo = new("EventSystem");
-                eventSystemGo.transform.SetParent(null);
-
-                eventSystemGo.AddComponent<EventSystem>();
-                eventSystemGo.AddComponent<StandaloneInputModule>();
+                return;
             }
+
+            Debug.Log("Did not find EventSystem in the current scene. EventSystem has been added to current scene.");
+
+            GameObject eventSystemGo = new("EventSystem");
+            eventSystemGo.transform.SetParent(null);
+
+            eventSystemGo.AddComponent<EventSystem>();
+            eventSystemGo.AddComponent<StandaloneInputModule>();
         }
 #endif
     }

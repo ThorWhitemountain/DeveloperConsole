@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using System;
 using UnityEngine.Profiling;
+using Object = UnityEngine.Object;
 
 namespace Anarkila.DeveloperConsole
 {
@@ -672,7 +673,8 @@ namespace Anarkila.DeveloperConsole
                     continue;
                 }
 
-                MonoBehaviour[] monoScripts = GameObject.FindObjectsOfType(type) as MonoBehaviour[];
+                //FindObjectsSortMode.InstanceID produces identical results as previously deprecated method.
+                MonoBehaviour[] monoScripts = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
                 for (int j = 0; j < monoScripts.Length; j++)
                 {
                     if (monoScripts[j] == null)
