@@ -12,6 +12,9 @@ namespace Anarkila.DeveloperConsole
 
         private void Awake()
         {
+#if UNITY_EDITOR
+            EnsureEventSystemExists();
+#endif
             transform.SetParent(null);
 
             // Allow only one instance of Developer Console.
@@ -96,8 +99,10 @@ namespace Anarkila.DeveloperConsole
         {
             Instance = null;
         }
+#endif
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        private static void EnsureEventSystemExists()
         {
             // In the editor, check EventSystem component exists in the scene. Otherwise, UI inputs cannot be received.
             EventSystem eventSystem = (EventSystem)FindFirstObjectByType(typeof(EventSystem));
@@ -106,10 +111,9 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
-            Debug.Log("Did not find EventSystem in the current scene. EventSystem has been added to current scene.");
+            Debug.LogWarning("Did not find EventSystem in the current scene. One has been added to current scene.");
 
             GameObject eventSystemGo = new("EventSystem");
-            eventSystemGo.transform.SetParent(null);
 
             eventSystemGo.AddComponent<EventSystem>();
             eventSystemGo.AddComponent<StandaloneInputModule>();
