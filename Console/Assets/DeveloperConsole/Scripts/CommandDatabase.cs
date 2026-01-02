@@ -88,8 +88,6 @@ namespace Anarkila.DeveloperConsole
                 for (int i = 0; i < commandList.Count; i++)
                 {
                     success = ExecuteCommand(commandList[i]);
-                    // uncomment this to return after command have failed.
-                    //if (!success) return success;
                 }
             }
 
@@ -222,7 +220,7 @@ namespace Anarkila.DeveloperConsole
                 }
                 catch (ArgumentException e)
                 {
-                    // Allow expection to be thrown so it can be printed to console (depending on the print setting)
+                    // Allow exception to be thrown so it can be printed to console (depending on the print setting)
                 }
                 finally
                 {
@@ -265,7 +263,7 @@ namespace Anarkila.DeveloperConsole
         /// </summary>
         private static List<string> ParseMultipleCommands(string input)
         {
-            if (input == null || input.Length == 0)
+            if (string.IsNullOrEmpty(input))
             {
                 return null;
             }
@@ -315,10 +313,10 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
-            if (command == null || command.Length == 0 || methodName == null || methodName.Length == 0)
+            if (string.IsNullOrEmpty(command) || string.IsNullOrEmpty(methodName))
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING + "command or methodname is null or empty!");
+                Debug.Log(ConsoleConstants.EDITORWARNING + "command or methodName is null or empty!");
 # endif
                 return;
             }
@@ -388,18 +386,14 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
-            if (command == null || command.Length == 0 || !Application.isPlaying)
+            if (string.IsNullOrEmpty(command) || !Application.isPlaying)
             {
                 return;
             }
 
             if (!ConsoleManager.IsConsoleInitialized() && !forceDelete)
             {
-                if (!CommandRemovedBeforeInit.ContainsKey(command))
-                {
-                    CommandRemovedBeforeInit.Add(command, log);
-                }
-
+                CommandRemovedBeforeInit.TryAdd(command, log);
                 return;
             }
 
@@ -662,19 +656,21 @@ namespace Anarkila.DeveloperConsole
             }
 
             // Loop through all MonoBehaviour classes added above.
-            // This uses GameObject.FindObjectsOfType to find all those scripts in the current scene and
-            // loops through them to find MonoBehaviour references.
-            // these loops look scary but this is reasonable fast
             for (int i = 0; i < scriptNames.Count; i++)
             {
-                Type type = Type.GetType(scriptNames[i]);
-                if (type == null)
+                Type requiredType = Type.GetType(scriptNames[i]);
+                if (requiredType == null)
                 {
                     continue;
                 }
 
                 //FindObjectsSortMode.InstanceID produces identical results as previously deprecated method.
-                MonoBehaviour[] monoScripts = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
+                if (Object.FindObjectsByType(requiredType, FindObjectsSortMode.None) is not MonoBehaviour[] monoScripts)
+                {
+                    Debug.LogWarning($"No gamObjects with required script found. RequiredScript: {scriptNames[i]}");
+                    continue;
+                }
+
                 for (int j = 0; j < monoScripts.Length; j++)
                 {
                     if (monoScripts[j] == null)
@@ -697,14 +693,17 @@ namespace Anarkila.DeveloperConsole
                             script = monoScripts[j];
                         }
 
-                        if (script != null)
+                        // not all commands belong to this script, so sometimes we get no script
+                        if (script == null)
                         {
-                            ConsoleCommandData data = new(script, commands[k].methodName, commands[k].commandName,
-                                commands[k].defaultValue, commands[k].info, commands[k].parameters, false,
-                                commands[k].methodInfo, commands[k].isCoroutine, commands[k].optionalParameter,
-                                commands[k].hiddenCommand);
-                            ConsoleCommands.Add(data);
+                            continue;
                         }
+
+                        ConsoleCommandData data = new(script, commands[k].methodName, commands[k].commandName,
+                            commands[k].defaultValue, commands[k].info, commands[k].parameters, false,
+                            commands[k].methodInfo, commands[k].isCoroutine, commands[k].optionalParameter,
+                            commands[k].hiddenCommand);
+                        ConsoleCommands.Add(data);
                     }
                 }
             }

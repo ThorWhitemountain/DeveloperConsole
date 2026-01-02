@@ -9,10 +9,7 @@ namespace Anarkila.DeveloperConsole
     [CustomEditor(typeof(DeveloperConsole))]
     public class DeveloperConsoleEditor : Editor
     {
-        private const string VERSION = "Developer Console 1.0.2";
-
-        private string[] tabs = new string[]
-            { "All Settings", "GUI Settings", "General Settings", "Keybindings", "Debug Settings" };
+        private string[] tabs = { "All Settings", "GUI Settings", "General Settings", "Keybindings", "Debug Settings" };
 
         private SerializedObject sTarget;
         private int toolbarTab;
@@ -24,7 +21,7 @@ namespace Anarkila.DeveloperConsole
 
         private DeveloperConsole console;
         private bool renderCustomGUI = true;
-        private int theme = 0;
+        private int theme;
         private string input;
 
         private void OnEnable()
@@ -43,7 +40,7 @@ namespace Anarkila.DeveloperConsole
             keybindings.Clear();
 
             List<string> fieldValues = console.settings.GetType().GetFields().Select(f => f.Name).ToList();
-            string setting = "settings.";
+            const string setting = "settings.";
             for (int i = 0; i < fieldValues.Count; i++)
             {
                 string name = setting + fieldValues[i];
@@ -73,7 +70,7 @@ namespace Anarkila.DeveloperConsole
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField(VERSION, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Developer Console " + Application.version, EditorStyles.boldLabel);
 
             renderCustomGUI = EditorGUILayout.Toggle("Custom GUI", renderCustomGUI);
             GUILayout.Space(20);
@@ -131,7 +128,6 @@ namespace Anarkila.DeveloperConsole
             GUILayout.Space(10);
             if (string.IsNullOrEmpty(input))
             {
-                Debug.Log("Input is empty.");
                 input = "";
             }
 
@@ -141,7 +137,6 @@ namespace Anarkila.DeveloperConsole
             {
                 PrintKeyCodeEquivalent(input);
             }
-
 
             // Show 'Next GUI theme button' when playing in Editor
             if (Application.isPlaying)
