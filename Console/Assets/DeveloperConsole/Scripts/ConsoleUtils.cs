@@ -49,9 +49,9 @@ namespace Anarkila.DeveloperConsole
             return input;
         }
 
+        // https://stackoverflow.com/a/9453762
         public static int CalcLevenshteinDistance(string a, string b)
         {
-            // https://stackoverflow.com/a/9453762
             if (string.IsNullOrEmpty(a) && string.IsNullOrEmpty(b))
             {
                 return 0;
@@ -72,12 +72,10 @@ namespace Anarkila.DeveloperConsole
             int[,] distances = new int[lengthA + 1, lengthB + 1];
             for (int i = 0; i <= lengthA; distances[i, 0] = i++)
             {
-                ;
             }
 
             for (int j = 0; j <= lengthB; distances[0, j] = j++)
             {
-                ;
             }
 
             for (int i = 1; i <= lengthA; i++)

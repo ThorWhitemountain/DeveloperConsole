@@ -15,30 +15,32 @@ namespace Anarkila.DeveloperConsole
         private List<string> predictions = new();
         private bool predictionPanelVisible;
         private bool shouldShowPredictions = true;
-        private bool allowPredictionCheck = true;
-        private int previousCommandIndex;
         private bool allowPredictions = true;
+        private bool shouldRunPredictionCheck = true;
+        private int previousCommandIndex;
         private bool allowEnterClick = true;
         private TMP_InputField inputField;
         private string currentSuggestion;
         private int suggestionIndex;
         private string previousText;
 
+        ///Used to prevent cycling through suggestions from updating suggestions 
+        private bool ignoreNext;
+
         private void Awake()
         {
-            if (TryGetComponent(out TMP_InputField inputfield))
-            {
-                inputField = inputfield;
-            }
+            bool gotInput = TryGetComponent(out inputField);
 
 #if UNITY_EDITOR
-            else
+            if (!gotInput)
             {
-                Debug.Log($"Gameobject {gameObject.name} doesn't have TMP_InputField component!");
+                Debug.Log($"GameObject {gameObject.name} doesn't have TMP_InputField component!");
                 enabled = false;
                 return;
             }
 #endif
+            previousText = inputField.text;
+
             ConsoleEvents.RegisterInputPredctionChanged += InputPredictionSettingChanged;
             ConsoleEvents.RegisterPreviousCommandEvent += SearchPreviousCommand; // TODO. rename this event?
             ConsoleEvents.RegisterFillCommandEvent += FillCommandFromSuggestion; // TODO. rename this event?
@@ -56,9 +58,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             UpdateLists();
-
-            // Add onvaluechanged listener to Console inputfield
-            inputField.onValueChanged.AddListener(PredictInput);
+            inputField.onValueChanged.AddListener(UpdatePredictions);
         }
 
         private void OnDestroy()
@@ -88,6 +88,7 @@ namespace Anarkila.DeveloperConsole
             allowPredictions = showPredictions;
         }
 
+        //Set via button press, not from keyboard inputs
         private void SetInputfieldText(string input)
         {
             inputField.text = input;
@@ -172,10 +173,12 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
+            ignoreNext = true;
+
             shouldShowPredictions = false;
-            allowPredictionCheck = false;
-            inputField.text = closestMatches[suggestionIndex];
+            shouldRunPredictionCheck = false;
             previousText = inputField.text;
+            inputField.text = closestMatches[suggestionIndex];
 
             //inputField.caretPosition = inputField.text.Length;
             inputField.MoveTextEnd(false);
@@ -248,7 +251,7 @@ namespace Anarkila.DeveloperConsole
             inputField.interactable = true;
             inputField.Select();
             inputField.ActivateInputField();
-            allowPredictionCheck = true;
+            shouldRunPredictionCheck = true;
         }
 
         private void ClearSuggestion()
@@ -268,27 +271,40 @@ namespace Anarkila.DeveloperConsole
 
         /// <summary>
         /// Try to find predictions from current inputfield text
-        /// This is messy and needs cleanup
         /// </summary>
-        private void PredictInput(string input)
+        private void UpdatePredictions(string input)
         {
-            if (inputField == null || !allowPredictions)
+            // are predictions turned on for the devconsole
+            if (!allowPredictions)
             {
                 return;
             }
 
-            if (inputField.text.Length == 0)
+            previousText = input;
+
+            // Used to not make selecting a prediction update the available predictions.
+            if (ignoreNext)
             {
-                // reset shouldShowPredictions
-                shouldShowPredictions = true;
+                ignoreNext = false;
+                return;
             }
 
-            if (!shouldShowPredictions)
+            // update predictions. (Gone from selecting a prediction to writing)
+            if (input.Length != previousText.Length)
             {
+                shouldRunPredictionCheck = true;
+            }
+
+            if (inputField == null || inputField.text.Length == 0)
+            {
+                closestMatches.Clear();
+                ConsoleEvents.Predictions(null);
+                predictionPanelVisible = false;
                 return;
             }
 
             // if input is null, empty or contains character '&', then don't show any predictions.
+            //TODO: allow prediction matching for last command (input.split(&)[^1]) ?
             if (string.IsNullOrEmpty(input) || input.Length == 0 || input.Contains(ConsoleConstants.AND))
             {
                 closestMatches.Clear();
@@ -297,101 +313,75 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
-            // if allowPredictionCheck is false (command filled with Tab delay)
-            // check if user deleted one char (default key: backspace)
-            // and allow prediction checking again
-            if (!allowPredictionCheck)
+            // if you selected a prediction, we pause the updating of the other predictions
+            // until you make a change to the input field
+            if (!shouldRunPredictionCheck)
             {
-                int len = previousText.Length - input.Length;
-                if (len != 1)
-                {
-                    return;
-                }
-
-                allowPredictionCheck = true;
+                return;
             }
 
-            int smallestDistance = 10000;
-            bool closeMatch = false;
             closestMatches.Clear();
-            previousText = input;
             predictions.Clear();
-            bool valid = false;
-            int index = 10000;
 
-            // loop through all console commands strings and try to find closest matching command
+            //arbitrary limit for when the command should be allowed
+            const int tooDissimilar = 100;
+            const int numberOfBestMatchesToKeep = 5;
+            List<(int distance, string command)> bestMatches = new();
+
+            // loop through all console commands strings and find the closest matching commands
             for (int i = 0; i < commandsWithValues.Count; i++)
             {
-                // check if first letter is the same
-                char inputfieldFirstChar = input[0];
-                char commandFirstChar = allConsoleCommands[i][0];
-                if (inputfieldFirstChar != commandFirstChar)
+                input = input.ToLowerInvariant();
+                string command = allConsoleCommands[i].ToLowerInvariant();
+
+                if (!command.Contains(input))
                 {
                     continue;
                 }
 
-                // if text contains command name
-                if (input.Contains(allConsoleCommands[i]))
+                int distance = ConsoleUtils.CalcLevenshteinDistance(input, command);
+
+                if (distance > tooDissimilar)
                 {
-                    closeMatch = true;
-                    index = i;
-                    closestMatches.Add(commandsWithValues[i]);
+                    continue;
                 }
 
-                int distance = ConsoleUtils.CalcLevenshteinDistance(input, allConsoleCommands[i]);
-
-                if (smallestDistance >= distance)
-                {
-                    smallestDistance = distance;
-                    index = i;
-
-                    // Validate that all characters in a string exist in current command name string
-                    char[] charArr = input.ToCharArray();
-                    for (int j = 0; j < charArr.Length; j++)
-                    {
-                        valid = allConsoleCommands[i].Contains(charArr[j].ToString());
-                        if (valid && input.Length < allConsoleCommands[i].Length + 1 &&
-                            !closestMatches.Contains(commandsWithValues[i]))
-                        {
-                            closestMatches.Add(commandsWithValues[i]);
-                        }
-                    }
-                }
+                AddMatch(distance, commandsWithValues[i]);
             }
 
-            if (closestMatches.Count != 0)
+            for (int i = 0; i < bestMatches.Count; i++)
             {
-                closestMatches.Reverse();
-
-                // add first 5 items from list to final list.
-                for (int i = 0; i < closestMatches.Count; i++)
-                {
-                    if (string.IsNullOrEmpty(closestMatches[i]))
-                    {
-                        continue;
-                    }
-
-                    predictions.Add(closestMatches[i]);
-                    if (i == 4)
-                    {
-                        break;
-                    }
-                }
+                predictions.Add(bestMatches[i].command);
+                closestMatches.Add(bestMatches[i].command);
             }
 
             // Send prediction event
             ConsoleEvents.Predictions(predictions);
 
             predictionPanelVisible = predictions.Count != 0;
-
-            if (closeMatch || (smallestDistance < commandsWithValues.Count && valid))
-            {
-                currentSuggestion = commandsWithValues[index];
-            }
-            else
+            if (predictions.Count == 0)
             {
                 ClearSuggestion();
                 ResetParameters();
+            }
+
+            return;
+
+            void AddMatch(int dist, string command)
+            {
+                // insert in sorted position
+                int i = 0;
+                while (i < bestMatches.Count && bestMatches[i].distance <= dist)
+                {
+                    i++;
+                }
+
+                bestMatches.Insert(i, (dist, command));
+
+                if (bestMatches.Count > numberOfBestMatchesToKeep)
+                {
+                    bestMatches.RemoveAt(bestMatches.Count - 1);
+                }
             }
         }
     }
