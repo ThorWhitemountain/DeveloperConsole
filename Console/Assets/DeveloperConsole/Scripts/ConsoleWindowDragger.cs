@@ -49,7 +49,7 @@ namespace Anarkila.DeveloperConsole
 
             // Check that at least two corners are inside screen bounds,
             // if not, reset console.
-            if (!ConsoleUtils.IsRectTransformInsideSreen(rectTransform, 2) || resetWindowPositionOnEnable)
+            if (!ConsoleUtils.IsRectTransformInsideScreen(rectTransform, 2) || resetWindowPositionOnEnable)
             {
                 ResetWindowPosition();
             }
@@ -72,7 +72,7 @@ namespace Anarkila.DeveloperConsole
             //rectTransform.anchoredPosition += eventData.delta; // works as well but feels a bit off
             rectTransform.position += (Vector3)eventData.delta;
 
-            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideSreen(rectTransform))
+            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideScreen(rectTransform))
             {
                 rectTransform.position = oldPos;
             }

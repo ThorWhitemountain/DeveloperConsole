@@ -162,22 +162,23 @@ namespace Anarkila.DeveloperConsole
             {
                 return new Vector2(unityTypeList[0], unityTypeList[1]);
             }
-            else if (type == typeof(Vector3) && unityTypeList.Count == 3)
+
+            if (type == typeof(Vector3) && unityTypeList.Count == 3)
             {
                 return new Vector3(unityTypeList[0], unityTypeList[1], unityTypeList[2]);
             }
-            else if (type == typeof(Vector4) && unityTypeList.Count == 4)
+
+            if (type == typeof(Vector4) && unityTypeList.Count == 4)
             {
                 return new Vector4(unityTypeList[0], unityTypeList[1], unityTypeList[2], unityTypeList[3]);
             }
-            else if (type == typeof(Quaternion) && unityTypeList.Count == 4)
+
+            if (type == typeof(Quaternion) && unityTypeList.Count == 4)
             {
                 return new Quaternion(unityTypeList[0], unityTypeList[1], unityTypeList[2], unityTypeList[3]);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         private static object ParseBuiltInTypes(string input, Type type, string raw)

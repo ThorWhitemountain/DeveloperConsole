@@ -96,7 +96,7 @@ namespace Anarkila.DeveloperConsole
             return distances[lengthA, lengthB];
         }
 
-        public static bool IsRectTransformInsideSreen(RectTransform rectTransform, float screenEdgeOffset = 0,
+        public static bool IsRectTransformInsideScreen(RectTransform rectTransform, float screenEdgeOffset = 0,
             int cornerCount = 4)
         {
             bool isInside = false;

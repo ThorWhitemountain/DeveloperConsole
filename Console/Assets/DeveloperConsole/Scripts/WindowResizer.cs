@@ -159,7 +159,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             // check that window is still inside screen boounds if forceInsideScreenBounds is set to true
-            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideSreen(rectTransform, 15f))
+            if (forceInsideScreenBounds && !ConsoleUtils.IsRectTransformInsideScreen(rectTransform, 15f))
             {
                 localX = previousX;
                 localY = previosY;
