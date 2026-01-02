@@ -261,15 +261,12 @@ namespace Anarkila.DeveloperConsole
         {
             input = ConsoleUtils.DeleteWhiteSpacesFromString(input);
 
-            bool success = bool.TryParse(input, out success);
-            if (success)
+            if (bool.TryParse(input, out bool result))
             {
-                return success;
+                return result;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         private static object ParseDouble(string input)
