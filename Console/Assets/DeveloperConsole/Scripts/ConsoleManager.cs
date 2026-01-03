@@ -474,9 +474,11 @@ namespace Anarkila.DeveloperConsole
 #endif
 
 #if UNITY_WEBGL
-            commands = CommandDatabase.GetConsoleCommandAttributes(isDebugBuild, registerStaticOnly, scanAllAssemblies);
+            commands = CommandDatabase.GetConsoleCommandAttributes(isDebugBuild, registerStaticOnly, scanAllAssemblies,
+                settings.projectAssemblyPrefix);
 #else
-            commands = CommandDatabase.GetConsoleCommandAttributes(isDebugBuild, registerStaticOnly, scanAllAssemblies);
+            commands = CommandDatabase.GetConsoleCommandAttributes(isDebugBuild, registerStaticOnly, scanAllAssemblies,
+                settings.projectAssemblyPrefix);
 #endif
             if (!registerStaticOnly)
             {

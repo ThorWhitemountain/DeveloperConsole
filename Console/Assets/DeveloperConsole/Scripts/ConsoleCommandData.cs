@@ -20,6 +20,7 @@ namespace Anarkila.DeveloperConsole
         public bool hiddenCommand { get; private set; }
         public bool hiddenCommandMinimalGUI { get; private set; }
         public string scriptNameString { get; private set; }
+        public string assembly { get; private set; }
         public char[] commandNameCharArray { get; private set; }
         public char[] commandNameLowerCharArray { get; private set; }
 
@@ -27,7 +28,7 @@ namespace Anarkila.DeveloperConsole
             string commandExplanation, string info, Type[] parameters,
             bool isStaticMethod, MethodInfo methodInfo, bool isCoroutine, bool[] optionalParameter,
             bool hiddenCommand = false,
-            bool hiddenCommandMinimalGUI = false, string scriptNameString = "")
+            bool hiddenCommandMinimalGUI = false, string scriptNameString = "", string assembly = "")
         {
             monoScript = scriptName;
             this.methodName = methodName;
@@ -42,6 +43,7 @@ namespace Anarkila.DeveloperConsole
             this.hiddenCommand = hiddenCommand;
             this.hiddenCommandMinimalGUI = hiddenCommandMinimalGUI;
             this.scriptNameString = scriptNameString;
+            this.assembly = assembly;
             commandNameLower = commandName.ToLower();
             commandNameCharArray = commandName.ToCharArray();
             commandNameLowerCharArray = commandNameLower.ToCharArray();

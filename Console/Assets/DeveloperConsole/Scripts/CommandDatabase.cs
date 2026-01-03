@@ -353,7 +353,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             ConsoleCommandData data = CreateCommandData(methodInfo, script, methodName, command, defaultValue, info,
-                isHiddenCommand, hiddenCommandMinimalGUI);
+                isHiddenCommand, hiddenCommandMinimalGUI, script.GetType().Assembly.FullName);
             if (data == null)
             {
                 return;
@@ -475,10 +475,16 @@ namespace Anarkila.DeveloperConsole
                     continue;
                 }
 
+                string assembly = "";
+                if (method.DeclaringType != null)
+                {
+                    assembly = method.DeclaringType.Assembly.GetName().Name;
+                }
+
                 ConsoleCommandData data = CreateCommandData(method, null, method.Name,
                     attribute.GetCommandName(), attribute.GetValue(),
                     attribute.GetInfo(), attribute.IsHiddenCommand(),
-                    attribute.IsHiddenMinimalGUI());
+                    attribute.IsHiddenMinimalGUI(), assembly);
 
                 if (data == null)
                 {
@@ -509,7 +515,7 @@ namespace Anarkila.DeveloperConsole
         /// </summary>
         private static ConsoleCommandData CreateCommandData(MethodInfo methodInfo, MonoBehaviour script,
             string methodName, string command, string defaultValue, string info, bool isHiddenCommand,
-            bool hiddenCommandMinimalGUI)
+            bool hiddenCommandMinimalGUI, string assembly)
         {
             if (methodInfo == null)
             {
@@ -571,7 +577,8 @@ namespace Anarkila.DeveloperConsole
             }
 
             ConsoleCommandData data = new(script, methodName, command, defaultValue, info, paraType, isStatic,
-                methodInfo, isCoroutine, optionalParameters, isHiddenCommand, hiddenCommandMinimalGUI, classNameString);
+                methodInfo, isCoroutine, optionalParameters, isHiddenCommand, hiddenCommandMinimalGUI, classNameString,
+                assembly);
 
             return data;
         }
@@ -649,9 +656,15 @@ namespace Anarkila.DeveloperConsole
                     continue;
                 }
 
-                if (!scriptNames.Contains(commands[i].scriptNameString))
+                string scriptName = commands[i].scriptNameString;
+                if (commands[i].assembly != "")
                 {
-                    scriptNames.Add(commands[i].scriptNameString);
+                    scriptName = $"{scriptName}, {commands[i].assembly}";
+                }
+
+                if (!scriptNames.Contains(scriptName))
+                {
+                    scriptNames.Add(scriptName);
                 }
             }
 
@@ -667,7 +680,7 @@ namespace Anarkila.DeveloperConsole
                 //FindObjectsSortMode.InstanceID produces identical results as previously deprecated method.
                 if (Object.FindObjectsByType(requiredType, FindObjectsSortMode.None) is not MonoBehaviour[] monoScripts)
                 {
-                    Debug.LogWarning($"No gamObjects with required script found. RequiredScript: {scriptNames[i]}");
+                    Debug.LogWarning($"No gameObjects with required script found. RequiredScript: {scriptNames[i]}");
                     continue;
                 }
 
