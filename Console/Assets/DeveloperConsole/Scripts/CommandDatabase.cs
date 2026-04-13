@@ -9,8 +9,6 @@ using Object = UnityEngine.Object;
 
 namespace Anarkila.DeveloperConsole
 {
-#pragma warning disable 0168
-#pragma warning disable 0219
     public static class CommandDatabase
     {
         private static readonly List<ConsoleCommandData> ConsoleCommandsRegisteredBeforeInit = new();
@@ -54,44 +52,36 @@ namespace Anarkila.DeveloperConsole
         /// <summary>
         /// Try to execute console command
         /// </summary>
-        public static bool TryExecuteCommand(string input)
+        public static void TryExecuteCommand(string input)
         {
             if (!ConsoleManager.IsConsoleInitialized())
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
-                          "Unable to execute command. Developer Console does not exist in the scene or has been destroyed.");
+                Debug.Log($"{ConsoleConstants.Editorwarning} Unable to execute command. Developer Console missing.");
 #endif
-                return false;
+                return;
             }
 
-            bool success = false;
-
-            // Does input contains character "&"
-            bool constainsAnd = input.Contains(ConsoleConstants.AND);
-
-            // Execute single command
-            if (!constainsAnd || !allowMultipleCommands)
-            {
-                success = ExecuteCommand(input, constainsAnd);
-            }
+            bool hasAnd = input.Contains(ConsoleConstants.And);
 
             // If single command failed then test multi but only if input contains character "&"
-            if (!success && constainsAnd && allowMultipleCommands)
+            if (hasAnd && allowMultipleCommands)
             {
                 List<string> commandList = ParseMultipleCommands(input);
                 if (commandList == null || commandList.Count == 0)
                 {
-                    return success;
+                    return;
                 }
 
                 for (int i = 0; i < commandList.Count; i++)
                 {
-                    success = ExecuteCommand(commandList[i]);
+                    ExecuteCommand(commandList[i]);
                 }
+            } else
+            {
+                // Execute single command
+                ExecuteCommand(input, hasAnd);
             }
-
-            return success;
         }
 
         private static bool ExecuteCommand(string input, bool silent = false)
@@ -110,12 +100,12 @@ namespace Anarkila.DeveloperConsole
             }
 
             // Parse command and parameter(s) from input
-            if (input.Contains(ConsoleConstants.SPACE))
+            if (input.Contains(ConsoleConstants.Space))
             {
-                int index = input.IndexOf(ConsoleConstants.EMPTYCHAR);
-                index = input.IndexOf(ConsoleConstants.EMPTYCHAR, index);
+                int index = input.IndexOf(ConsoleConstants.Emptychar);
+                index = input.IndexOf(ConsoleConstants.Emptychar, index);
                 remaining = input.Substring(index + 1);
-                parametersAsString = remaining.Split(ConsoleConstants.CHARCOMMA);
+                parametersAsString = remaining.Split(ConsoleConstants.Charcomma);
                 input = input.Substring(0, index);
                 if (!caseSensetive)
                 {
@@ -269,7 +259,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             ParseList.Clear();
-            string[] commandArray = input.Split(ConsoleConstants.ANDCHAR);
+            string[] commandArray = input.Split(ConsoleConstants.Andchar);
 
             for (int i = 0; i < commandArray.Length; i++)
             {
@@ -283,7 +273,7 @@ namespace Anarkila.DeveloperConsole
                 char[] arr = commandArray[i].ToCharArray();
                 for (int j = 0; j < arr.Length; j++)
                 {
-                    if (arr[j] != ConsoleConstants.EMPTYCHAR)
+                    if (arr[j] != ConsoleConstants.Emptychar)
                     {
                         break;
                     }
@@ -307,7 +297,7 @@ namespace Anarkila.DeveloperConsole
             if (!ConsoleManager.IsRunningOnMainThread(System.Threading.Thread.CurrentThread))
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "Console.RegisterCommand cannot be called from another thread.");
 #endif
                 return;
@@ -316,7 +306,7 @@ namespace Anarkila.DeveloperConsole
             if (string.IsNullOrEmpty(command) || string.IsNullOrEmpty(methodName))
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING + "command or methodName is null or empty!");
+                Debug.Log(ConsoleConstants.Editorwarning + "command or methodName is null or empty!");
 # endif
                 return;
             }
@@ -324,7 +314,7 @@ namespace Anarkila.DeveloperConsole
             if (script == null)
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "MonoBehaviour reference is null! If you are registering non-Monobehaviour commands, Use [ConsoleCommand()] attribute instead.");
 #endif
                 return;
@@ -333,7 +323,7 @@ namespace Anarkila.DeveloperConsole
             if (ConsoleManager.GetSettings().registerStaticCommandsOnly)
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "Trying to register new MonoBehaviour command while option RegisterStaticCommandsOnly is enabled.");
 #endif
                 return;
@@ -364,8 +354,7 @@ namespace Anarkila.DeveloperConsole
                 ConsoleCommands.Add(data);
                 UpdateLists();
                 ConsoleEvents.ListsChanged();
-            }
-            else
+            } else
             {
                 // new command registered before console was initialized
                 ConsoleCommandsRegisteredBeforeInit.Add(data);
@@ -381,7 +370,7 @@ namespace Anarkila.DeveloperConsole
             {
 #if UNITY_EDITOR
                 Debug.Log(
-                    ConsoleConstants.EDITORWARNING + "Console.RemoveCommand cannot be called from another thread.");
+                    ConsoleConstants.Editorwarning + "Console.RemoveCommand cannot be called from another thread.");
 #endif
                 return;
             }
@@ -423,8 +412,7 @@ namespace Anarkila.DeveloperConsole
                 if (foundAny)
                 {
                     Console.Log($"Removed command [{command}]");
-                }
-                else
+                } else
                 {
                     Console.Log($"Didn't find command with name [{command}]");
                 }
@@ -494,8 +482,7 @@ namespace Anarkila.DeveloperConsole
                 if (method.IsStatic)
                 {
                     StaticCommands.Add(data);
-                }
-                else
+                } else
                 {
                     commandList.Add(data);
                 }
@@ -531,26 +518,26 @@ namespace Anarkila.DeveloperConsole
                 // this warning means you have method with [ConsoleCommand(null)] or [ConsoleCommand("")] somewhere.
                 // Below message should print the script and method where this is located.
                 Debug.Log(
-                    $"{ConsoleConstants.EDITORWARNING}{classNameString}.{methodName} [ConsoleCommand] name is empty or null! Please assign different command name.");
+                    $"{ConsoleConstants.Editorwarning}{classNameString}.{methodName} [ConsoleCommand] name is empty or null! Please assign different command name.");
 #endif
                 return null;
             }
 
-            if (command.Contains(ConsoleConstants.AND) || command.Contains(ConsoleConstants.COMMA) ||
-                command.Contains(ConsoleConstants.SPACE))
+            if (command.Contains(ConsoleConstants.And) || command.Contains(ConsoleConstants.Comma) ||
+                command.Contains(ConsoleConstants.Space))
             {
 #if UNITY_EDITOR
                 // [ConsoleCommand()] cannot contain characters '&' or ',' (comma) because
                 // character '&' is used to parse multiple commands
                 // and character ',' (comma) is used to parse multiple parameters
                 Debug.Log(
-                    $"{ConsoleConstants.EDITORWARNING}[ConsoleCommand] cannot contain whitespace, '&' or comma. Rename command [{command}] in {classNameString}{methodName}");
+                    $"{ConsoleConstants.Editorwarning}[ConsoleCommand] cannot contain whitespace, '&' or comma. Rename command [{command}] in {classNameString}{methodName}");
 #endif
                 return null;
             }
 
             bool isStatic = methodInfo.IsStatic;
-            bool isCoroutine = methodInfo.ToString().Contains(ConsoleConstants.IENUMERATOR);
+            bool isCoroutine = methodInfo.ToString().Contains(ConsoleConstants.Ienumerator);
             ParameterInfo[] methodParams = methodInfo.GetParameters();
             Type[] paraType = new Type[methodParams.Length];
             bool[] optionalParameters = new bool[methodParams.Length];
@@ -608,8 +595,7 @@ namespace Anarkila.DeveloperConsole
                         FindAttributeAndAdd(flags, j, types, cb);
                     }
                 }
-            }
-            else
+            } else
             {
                 // else loop through current assembly which should be Unity assembly
                 Assembly unityAssembly = Assembly.GetExecutingAssembly();
@@ -734,8 +720,7 @@ namespace Anarkila.DeveloperConsole
                             command.scriptNameString, command.methodName))
                     {
                         ConsoleCommandsRegisteredBeforeInit.Remove(command);
-                    }
-                    else
+                    } else
                     {
                         ConsoleCommands.Add(command);
                     }
@@ -792,13 +777,12 @@ namespace Anarkila.DeveloperConsole
 
                 if (!string.IsNullOrWhiteSpace(ConsoleCommands[i].info))
                 {
-                    string fullText = ConsoleCommands[i].commandName + ConsoleConstants.LINE + ConsoleCommands[i].info;
+                    string fullText = ConsoleCommands[i].commandName + ConsoleConstants.Line + ConsoleCommands[i].info;
                     if (!CommandStringsWithInfos.Contains(fullText))
                     {
                         CommandStringsWithInfos.Add(fullText);
                     }
-                }
-                else
+                } else
                 {
                     if (!CommandStringsWithInfos.Contains(ConsoleCommands[i].commandName))
                     {
@@ -842,7 +826,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             Console.LogEmpty();
-            ConsoleEvents.Log(ConsoleConstants.COMMANDMESSAGE, logType: LogType.Log);
+            ConsoleEvents.Log(ConsoleConstants.Commandmessage, logType: LogType.Log);
             for (int i = 0; i < commands.Count; i++)
             {
                 ConsoleEvents.Log(commands[i], logType: LogType.Log);
@@ -870,7 +854,7 @@ namespace Anarkila.DeveloperConsole
                         parameters != commands[i].parameters)
                     {
 #if UNITY_EDITOR
-                        Debug.Log(ConsoleConstants.EDITORWARNING +
+                        Debug.Log(ConsoleConstants.Editorwarning +
                                   $"Command '{commandName}' has already been registered. " +
                                   $"Command '{commandName}' in class '{className}' with method name '{methodName}' will be ignored. " +
                                   "Give this attribute other command name!");

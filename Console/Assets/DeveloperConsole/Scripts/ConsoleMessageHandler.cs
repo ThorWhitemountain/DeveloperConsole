@@ -75,7 +75,7 @@ namespace Anarkila.DeveloperConsole
 
                 // No need to pool messages if only Minimal GUI is used.
                 if ((settings.interfaceStyle == ConsoleGUIStyle.Minimal
-                     && settings.UnityLogOption == ConsoleLogOptions.DontPrintLogs
+                     && settings.unityLogOption == ConsoleLogOptions.DontPrintLogs
                      && settings.unityThreadedLogOption == ConsoleLogOptions.DontPrintLogs)
                     || (settings.interfaceStyle == ConsoleGUIStyle.Minimal && !settings.allowGUIStyleChangeRuntime))
                 {

@@ -134,8 +134,7 @@ namespace Anarkila.DeveloperConsole
             if (previousCommandIndex < 0)
             {
                 previousCommandIndex = executedCommands.Count - 1;
-            }
-            else if (previousCommandIndex > executedCommands.Count || previousCommandIndex == executedCommands.Count)
+            } else if (previousCommandIndex > executedCommands.Count || previousCommandIndex == executedCommands.Count)
             {
                 previousCommandIndex = 0;
             }
@@ -305,7 +304,7 @@ namespace Anarkila.DeveloperConsole
 
             // if input is null, empty or contains character '&', then don't show any predictions.
             //TODO: allow prediction matching for last command (input.split(&)[^1]) ?
-            if (string.IsNullOrEmpty(input) || input.Length == 0 || input.Contains(ConsoleConstants.AND))
+            if (string.IsNullOrEmpty(input) || input.Length == 0 || input.Contains(ConsoleConstants.And))
             {
                 closestMatches.Clear();
                 ConsoleEvents.Predictions(null);

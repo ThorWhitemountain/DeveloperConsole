@@ -35,7 +35,7 @@ public static class Console
     /// </summary>
     public static void LogEmpty()
     {
-        ConsoleEvents.Log(ConsoleConstants.SPACE, forceIgnoreTimeStamp: true, logType: LogType.Log);
+        ConsoleEvents.Log(ConsoleConstants.Space, forceIgnoreTimeStamp: true, logType: LogType.Log);
     }
 
     /// <summary>
@@ -216,7 +216,7 @@ public static class Console
     /// </summary>
     public static ConsoleLogOptions GetCurrentUnityLogOption(ConsoleLogOptions logOption)
     {
-        return GetSettings().UnityLogOption;
+        return GetSettings().unityLogOption;
     }
 
     /// <summary>
@@ -284,7 +284,7 @@ public static class Console
         if (theme == ConsoleGUITheme.Custom)
         {
 #if UNITY_EDITOR
-            Debug.Log(ConsoleConstants.EDITORWARNING + "Set Custom GUI theme by calling Console.SetCustomGUITheme()");
+            Debug.Log(ConsoleConstants.Editorwarning + "Set Custom GUI theme by calling Console.SetCustomGUITheme()");
 #endif
             return;
         }

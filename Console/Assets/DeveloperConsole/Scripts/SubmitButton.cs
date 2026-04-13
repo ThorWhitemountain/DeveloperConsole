@@ -3,33 +3,23 @@ using UnityEngine;
 
 namespace Anarkila.DeveloperConsole
 {
+    [RequireComponent(typeof(Button))]
     public class SubmitButton : MonoBehaviour
     {
         private Button button;
 
-        private void Start()
+        private void Awake()
         {
-            if (TryGetComponent(out Button btn))
-            {
-                button = btn;
-                button.onClick.AddListener(SubmitButtonClick);
-            }
-#if UNITY_EDITOR
-            else
-            {
-                Debug.Log($"Gameobject: {gameObject.name} doesn't have Button component!");
-            }
-#endif
+            button = GetComponent<Button>();
+            button.onClick.AddListener(SubmitButtonClick);
         }
 
         private void OnDestroy()
         {
-            if (button == null)
+            if (button != null)
             {
-                return;
+                button.onClick.RemoveListener(SubmitButtonClick);
             }
-
-            button.onClick.RemoveAllListeners();
         }
 
         private void SubmitButtonClick()

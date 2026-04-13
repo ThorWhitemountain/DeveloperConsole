@@ -4,69 +4,35 @@ using TMPro;
 
 namespace Anarkila.DeveloperConsole
 {
-    /// <summary>
-    /// This script is attached to every Console message
-    /// </summary>
+
+    [RequireComponent(typeof(TMP_Text))]
     [DefaultExecutionOrder(-9990)]
     public class ConsoleMessage : MonoBehaviour, IPointerClickHandler
     {
-        private Vector3 cachedVector = Vector3.one;
-        private Color textColor = Color.white;
-        private Transform cachedTransform;
         private TMP_Text textComponent;
+        private Color defaultColor = Color.white;
 
         private void Awake()
         {
-            if (TryGetComponent(out TMP_Text text))
-            {
-                textComponent = text;
-            }
-#if UNITY_EDITOR
-            else
-            {
-                Debug.Log($"Gameobject {gameObject.name} doesn't have TMP_Text component!");
-            }
-#endif
-            cachedTransform = transform;
+            textComponent = GetComponent<TMP_Text>();
 
             ConsoleSettings settings = ConsoleManager.GetSettings();
-            if (settings != null)
-            {
-                textColor = settings.interfaceStyle == ConsoleGUIStyle.Large
-                    ? settings.consoleColors.largeGUITextColor
-                    : settings.consoleColors.minimalGUITextColor;
-            }
+            defaultColor = settings.interfaceStyle == ConsoleGUIStyle.Large
+                ? settings.consoleColors.largeGUITextColor
+                : settings.consoleColors.minimalGUITextColor;
         }
 
         public void SetMessage(string text, Color? textColor = null)
         {
-            if (textComponent == null)
-            {
-                return;
-            }
-
             textComponent.text = text;
+            textComponent.faceColor = textColor ?? defaultColor;
 
-            if (textColor != null)
-            {
-                textComponent.faceColor = (Color)textColor;
-            }
-            else
-            {
-                textComponent.faceColor = this.textColor;
-            }
-
-            cachedTransform.SetAsLastSibling();
-            cachedTransform.localScale = cachedVector;
+            transform.SetAsLastSibling();
+            transform.localScale = Vector3.one;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (textComponent == null)
-            {
-                return;
-            }
-
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 ConsoleEvents.ShowContextMenu(gameObject, eventData, textComponent.text);

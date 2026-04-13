@@ -143,6 +143,7 @@ namespace Anarkila.DeveloperConsole
         /// <summary>
         /// Get current console settings
         /// </summary>
+        /// <returns>Guaranteed non-null settings</returns>
         public static ConsoleSettings GetSettings()
         {
             if (settings == null)
@@ -249,7 +250,7 @@ namespace Anarkila.DeveloperConsole
         /// </summary>
         public static bool IsCaseSensetive()
         {
-            return settings.commandsAreCaseSensetive;
+            return settings.commandsAreCaseSensitive;
         }
 
         private static void LogOptionsChanged(ConsoleLogOptions logOption)
@@ -262,7 +263,7 @@ namespace Anarkila.DeveloperConsole
                 return;
             }
 
-            settings.UnityLogOption = logOption;
+            settings.unityLogOption = logOption;
             ConsoleEvents.NewSettingsSet();
         }
 
@@ -343,8 +344,7 @@ namespace Anarkila.DeveloperConsole
                 ConsoleEvents.CloseConsole();
                 ConsoleEvents.ChangeGUIStyle(style);
                 ConsoleEvents.OpenConsole();
-            }
-            else
+            } else
             {
                 ConsoleEvents.ChangeGUIStyle(style);
             }
@@ -393,7 +393,7 @@ namespace Anarkila.DeveloperConsole
             if (!consoleInitialized)
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "Console is not yet initialized. Make sure DeveloperConsole.prefab exists in the scene.");
 #endif
                 return;
@@ -407,8 +407,7 @@ namespace Anarkila.DeveloperConsole
                 {
                     ConsoleUtils.ShowCursor(true);
                 }
-            }
-            else
+            } else
             {
                 if (settings.hideCursorOnDisable)
                 {
@@ -431,9 +430,8 @@ namespace Anarkila.DeveloperConsole
             {
                 if (!settings.clearMessagesOnSceneChange)
                 {
-                    ConsoleEvents.Log(ConsoleConstants.SPACE, forceIgnoreTimeStamp: true);
-                }
-                else
+                    ConsoleEvents.Log(ConsoleConstants.Space, forceIgnoreTimeStamp: true);
+                } else
                 {
                     ConsoleEvents.ClearConsoleMessages();
                 }
@@ -444,8 +442,7 @@ namespace Anarkila.DeveloperConsole
                     string additive = mode == LoadSceneMode.Additive ? "(Additive)" : null;
                     Console.Log($"Loaded Scene: [{sceneName}] {additive}");
                 }
-            }
-            else if (!settings.printPlayButtonToSceneTime && settings.printLoadedSceneName)
+            } else if (!settings.printPlayButtonToSceneTime && settings.printLoadedSceneName)
             {
                 Console.Log($"Loaded Scene: [{sceneName}]");
             }
@@ -468,7 +465,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             if (scanAllAssemblies)
             {
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "option ScanAllAssemblies is set to true. This increases initialization time.");
             }
 #endif
@@ -484,8 +481,7 @@ namespace Anarkila.DeveloperConsole
             {
                 CommandDatabase.RegisterMonoBehaviourCommands(commands);
                 timer.Stop();
-            }
-            else
+            } else
             {
                 CommandDatabase.UpdateLists();
             }
@@ -498,17 +494,17 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
                 if (settings.registerStaticCommandsOnly)
                 {
-                    suffix = ConsoleConstants.REGISTEREDSTATIC;
+                    suffix = ConsoleConstants.Registeredstatic;
                 }
 #endif
-                string message = ConsoleConstants.CONSOLEINIT;
+                string message = ConsoleConstants.Consoleinit;
                 message += $"Initialization took {time} ms{suffix}";
                 ConsoleEvents.Log(message);
             }
 
             if (settings.printStartupHelpText)
             {
-                ConsoleEvents.Log(ConsoleConstants.HELPTEXT);
+                ConsoleEvents.Log(ConsoleConstants.Helptext);
             }
 
             consoleInitialized = true;
@@ -518,8 +514,7 @@ namespace Anarkila.DeveloperConsole
             {
                 // Add 10 frame artificial delay before calling console is initialized events
                 delayUtil.DelayedCallFrames(NotifyConsoleIsReady, 10);
-            }
-            else
+            } else
             {
                 // just in case DelayHelper Instance is null for whatever reason, let's call this without delay
                 // this might cause some messages not to be printed that were called on Awake/Start but otherwise console should work fine.

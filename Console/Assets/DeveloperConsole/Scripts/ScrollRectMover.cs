@@ -18,12 +18,11 @@ namespace Anarkila.DeveloperConsole
                 ConsoleSettings settings = ConsoleManager.GetSettings();
                 if (settings != null)
                 {
-                    scrollRect.verticalScrollbarVisibility = settings.ScrollRectVisibility;
+                    scrollRect.verticalScrollbarVisibility = settings.scrollRectVisibility;
                 }
 
                 ConsoleEvents.RegisterConsoleScrollMoveEvent += ScrollToBottom;
-            }
-            else
+            } else
             {
 #if UNITY_EDITOR
                 Debug.Log($"Gameobject {gameObject.name} doesn't have ScrollRect component!");

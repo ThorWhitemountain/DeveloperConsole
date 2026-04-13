@@ -1,16 +1,22 @@
 ﻿public class ConsoleCommand : System.Attribute
 {
-    private string commandName; // command name
-    private string value; // Optional parameter: command default value (as string)
-    private string info; // Optional parameter: Command info
+    // command name
+    private string commandName;
 
-    private bool
-        debugOnlyCommand; // Optional parameter: if set to true, command will only be registered in debug builds (Editor and Development build)
+    // Optional parameter: command default value (as string)
+    private string value;
 
-    private bool
-        hiddenCommandMinimalGUI; // Optional parameter: if set to true, command won't show up in predictions when using Minimal GUI
+    // Optional parameter: Command info
+    private string info;
 
-    private bool fullyHiddenCommand; // Optional parameter: if set to true, command won't show up in predictions
+    // Optional parameter: if set to true, command will only be registered in debug builds (Editor and Development build)
+    private bool debugOnlyCommand;
+
+    // Optional parameter: if set to true, command won't show up in predictions when using Minimal GUI
+    private bool hiddenCommandMinimalGUI;
+
+    // Optional parameter: if set to true, command won't show up in predictions
+    private bool fullyHiddenCommand;
 
     public ConsoleCommand(string commandName, string value = "", string info = "",
         bool debugOnlyCommand = false, bool hiddenCommandMinimalGUI = false, bool hiddenCommand = false)

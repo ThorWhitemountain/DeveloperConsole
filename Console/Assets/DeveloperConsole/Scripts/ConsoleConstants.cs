@@ -5,35 +5,35 @@ public static class ConsoleConstants
 {
     // Constant strings, don't modify.
 #if UNITY_EDITOR
-    public const string EDITORWARNING = "<color=red>Developer Console Editor Warning: </color>";
-    public const string UNLIMITED = "Unlimited";
+    public const string Editorwarning = "<color=red>Developer Console Editor Warning: </color>";
+    public const string Unlimited = "Unlimited";
 #endif
-    public const string HELPTEXT = "Type 'help' and press Enter to print all available commands.";
-    public const string REGISTEREDSTATIC = " (static commands only).";
-    public const string COMMANDMESSAGE = "All available commands:";
-    public const string CONSOLEINIT = "Console Initialized. ";
-    public const string COLOR_RED_START = "<color=red>";
-    public const string DATETIMEFORMAT = "HH:mm:ss";
-    public const string IENUMERATOR = "IEnumerator";
-    public const string COLOR_END = "</color>";
-    public const string OPENPARENTHESIS = "(";
-    public const string CLOSEDBRACKET = "] ";
-    public const string OPENBRACKET = "[";
-    public const char EMPTYCHAR = ' ';
-    public const char CHARCOMMA = ',';
-    public const string LINE = " - ";
-    public const char ANDCHAR = '&';
-    public const string SPACE = " ";
-    public const string COMMA = ",";
-    public const string EMPTY = "";
-    public const string AND = "&";
+    public const string Helptext = "Type 'help' and press Enter to print all available commands.";
+    public const string Registeredstatic = " (static commands only).";
+    public const string Commandmessage = "All available commands:";
+    public const string Consoleinit = "Console Initialized. ";
+    public const string ColorRedStart = "<color=red>";
+    public const string Datetimeformat = "HH:mm:ss";
+    public const string Ienumerator = "IEnumerator";
+    public const string ColorEnd = "</color>";
+    public const string Openparenthesis = "(";
+    public const string Closedbracket = "] ";
+    public const string Openbracket = "[";
+    public const char Emptychar = ' ';
+    public const char Charcomma = ',';
+    public const string Line = " - ";
+    public const char Andchar = '&';
+    public const string Space = " ";
+    public const string Comma = ",";
+    public const string Empty = "";
+    public const string And = "&";
     public const string T = "\t";
     public const string F = "f";
 
     // Array of all supported parameter types
     // If you want to add types to this list,
     // you need to modify ParameterParser.ParseBuiltInTypes() function.
-    public static Type[] SupportedTypes =
+    public static readonly Type[] SupportedTypes =
     {
         typeof(int), typeof(float),
         typeof(decimal), typeof(double),
@@ -46,7 +46,7 @@ public static class ConsoleConstants
     // Array of supported Unity types
     // If you want to add types to this list,
     // you need to modify ParameterParser.ParseUnityTypes() function.
-    public static Type[] UnityTypes =
+    public static readonly Type[] UnityTypes =
     {
         typeof(Vector2), typeof(Vector3),
         typeof(Vector4), typeof(Quaternion)

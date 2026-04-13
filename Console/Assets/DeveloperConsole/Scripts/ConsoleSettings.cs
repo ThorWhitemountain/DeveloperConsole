@@ -29,7 +29,7 @@ namespace Anarkila.DeveloperConsole
         public bool forceConsoleInsideScreenBounds;
 
         [Tooltip("ScrollRect scrollbar visibility")]
-        public ScrollRect.ScrollbarVisibility ScrollRectVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+        public ScrollRect.ScrollbarVisibility scrollRectVisibility = ScrollRect.ScrollbarVisibility.Permanent;
 
         public ConsoleColors consoleColors = new()
         {
@@ -54,7 +54,7 @@ namespace Anarkila.DeveloperConsole
         public bool initializeConsoleOnFirstOpen;
 
         [Tooltip(
-            "Whether to register static commands only (No Monobehaviour commands with [ConsoleCommand()] attributes). " +
+            "Whether to register static commands only (No MonoBehaviour commands with [ConsoleCommand()] attributes). " +
             "To register MonoBehaviour commands use Console.RegisterCommand() method.")]
         public bool registerStaticCommandsOnly;
 
@@ -62,19 +62,18 @@ namespace Anarkila.DeveloperConsole
             "Used together with 'scanAllAssemblies' to reduce the assembly count and improve startup performance when scanning all assemblies")]
         public string projectAssemblyPrefix = "";
 
-        [Tooltip(
-            "Whether to look for all C# assemblies for Console Commands. Enabling this increases the Initialization a lot, from ~20 ms to ~1500 ms.")]
+        [Tooltip("Whether to look for all C# assemblies for Console Commands. Enabling this increases the Initialization a lot, from ~20 ms to ~1500 ms.")]
         public bool scanAllAssemblies;
 
-        [Tooltip("Whether commands are case sensetive'")]
-        public bool commandsAreCaseSensetive;
+        [Tooltip("Whether commands are case sensitive'")]
+        public bool commandsAreCaseSensitive;
 
         [Tooltip("Whether to allow GUI style change during runtime.")]
         public bool allowGUIStyleChangeRuntime = true;
 
         // If you only use Minimal GUI, consider changing these to ConsoleLogOptions.DontPrintLogs
         [Tooltip("Whether to print Debug.Log and Debug.LogError messages into Developer Console (Large GUI only)")]
-        public ConsoleLogOptions UnityLogOption = ConsoleLogOptions.LogExceptionWithStackTrace;
+        public ConsoleLogOptions unityLogOption = ConsoleLogOptions.LogExceptionWithStackTrace;
 
         [Tooltip(
             "Whether to print Debug.Log and Debug.LogError message into Developer Console from another threads (Large GUI only)")]
@@ -159,10 +158,10 @@ namespace Anarkila.DeveloperConsole
         // Key to fill next command from suggestion
         // however if consoleSearchCommandKey clicked then this key goes reverse direction of that key
         // just like Terminal/CMD does
-        public KeyCode NextSuggestedCommandKey = KeyCode.DownArrow;
+        public KeyCode nextSuggestedCommandKey = KeyCode.DownArrow;
 
         // key to fill next command from suggestion alternative key
-        public KeyCode NextSuggestedCommandKeyAlt = KeyCode.Tab;
+        public KeyCode nextSuggestedCommandKeyAlt = KeyCode.Tab;
 
         [Header("Debug Settings")] [Tooltip("Whether to print message counts after stopping play mode")]
         public bool printMessageCountOnStopPlay;
@@ -280,26 +279,26 @@ public enum ConsoleLogOptions
     // Don't print any Debug.Log/LogError to Console
     DontPrintLogs,
 
-    // Print expections to Console such as
+    // Print exceptions to Console such as
     // "UnityException: Transform child out of bounds"
     // In Unity Editor only!
     LogWithExceptionsEditorOnly,
 
-    // Print expections expections with stack trace to Console such as
+    // Print exceptions with stack trace to Console such as
     // "UnityException: Transform child out of bounds YourScript.Start () (at Assets/Example/ExampleScene/YourScript.cs:42)"
     // in Unity Editor only!
     LogExceptionsWithStackTraceEditorOnly,
 
-    // Print Debug logs without expections or stack traces to Console
+    // Print Debug logs without exceptions or stack traces to Console
     // In Editor and Build!
     LogWithoutExceptions,
 
-    // Print expections to Console such
+    // Print exceptions to Console such
     // as "UnityException: Transform child out of bounds"
     // In Editor and Build!
     LogWithExceptions,
 
-    // Print expections with stack trace to Console such as
+    // Print exceptions with stack trace to Console such as
     // "UnityException: Transform child out of bounds YourScript.Start () (at Assets/Example/ExampleScene/YourScript.cs:42)"
     // In Editor and Build!
     LogExceptionWithStackTrace,

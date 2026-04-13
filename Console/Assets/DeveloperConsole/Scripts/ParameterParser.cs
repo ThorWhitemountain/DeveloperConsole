@@ -29,7 +29,7 @@ namespace Anarkila.DeveloperConsole
             if (parameters.Length >= 10)
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING +
+                Debug.Log(ConsoleConstants.Editorwarning +
                           "10 or more parameters is a bit extreme for single method, don't you think? " +
                           $"Command '{commandName}' in '{className}' '{methodName}' will be ignored.");
 #endif
@@ -39,7 +39,7 @@ namespace Anarkila.DeveloperConsole
             if (isCoroutine && parameters.Length >= 2)
             {
 #if UNITY_EDITOR
-                Debug.Log(ConsoleConstants.EDITORWARNING + "Unity coroutines are limited to max one argument. " +
+                Debug.Log(ConsoleConstants.Editorwarning + "Unity coroutines are limited to max one argument. " +
                           $"Command '{commandName}' in '{className}' '{methodName}' will be ignored.");
 #endif
                 return false;
@@ -56,7 +56,7 @@ namespace Anarkila.DeveloperConsole
                         // Multiple parameters with parameters: Vector2/3/4 or string[] is currently not supported
                         // because parameters are parsed by character ',' (comma)
                         // method that takes in single Vector2/3/4 or string[] is supported.
-                        Debug.Log(ConsoleConstants.EDITORWARNING +
+                        Debug.Log(ConsoleConstants.Editorwarning +
                                   $"Method contains multiple parameters with {parameters[i].ParameterType}, this is not supported! " +
                                   $"Command '{commandName}' in '{className}' '{methodName}' will be ignored!");
 #endif
@@ -67,7 +67,7 @@ namespace Anarkila.DeveloperConsole
                 if (!ConsoleConstants.SupportedTypes.Contains(parameters[i].ParameterType))
                 {
 #if UNITY_EDITOR
-                    Debug.Log(ConsoleConstants.EDITORWARNING +
+                    Debug.Log(ConsoleConstants.Editorwarning +
                               $"Parameter typeof {parameters[i].ParameterType} is not supported! \n" +
                               $"Command '{commandName}' in '{className}' '{methodName}' will be ignored!");
 #endif
@@ -92,8 +92,7 @@ namespace Anarkila.DeveloperConsole
                 if (type.Length != 0)
                 {
                     input = new string[type.Length];
-                }
-                else
+                } else
                 {
                     return input;
                 }
@@ -109,8 +108,7 @@ namespace Anarkila.DeveloperConsole
                     parameters[i] = containsUnityType
                         ? ParseUnityTypes(raw, type[i])
                         : ParseBuiltInTypes(input[i], type[i], raw);
-                }
-                else if (data.optionalParameter[i])
+                } else if (data.optionalParameter[i])
                 {
                     parameters[i] = null;
                 }
@@ -135,11 +133,10 @@ namespace Anarkila.DeveloperConsole
             input = ConsoleUtils.DeleteCharacterF(input);
 
             string[] paramArr;
-            if (input.Contains(ConsoleConstants.COMMA))
+            if (input.Contains(ConsoleConstants.Comma))
             {
-                paramArr = input.Split(ConsoleConstants.CHARCOMMA);
-            }
-            else
+                paramArr = input.Split(ConsoleConstants.Charcomma);
+            } else
             {
                 paramArr = input.Split();
             }
@@ -216,7 +213,7 @@ namespace Anarkila.DeveloperConsole
                 return input;
             }
 
-            string[] words = input.Split(ConsoleConstants.CHARCOMMA);
+            string[] words = input.Split(ConsoleConstants.Charcomma);
             for (int i = 0; i < words.Length; i++)
             {
                 words[i] = words[i].Trim(); // Remove all whitespaces from start and end of the string
@@ -234,8 +231,7 @@ namespace Anarkila.DeveloperConsole
             if (success)
             {
                 return number;
-            }
-            else
+            } else
             {
                 return null;
             }
@@ -250,8 +246,7 @@ namespace Anarkila.DeveloperConsole
             if (success)
             {
                 return number;
-            }
-            else
+            } else
             {
                 return null;
             }
@@ -278,8 +273,7 @@ namespace Anarkila.DeveloperConsole
             if (success)
             {
                 return number;
-            }
-            else
+            } else
             {
                 return null;
             }
@@ -294,8 +288,7 @@ namespace Anarkila.DeveloperConsole
             if (success)
             {
                 return number;
-            }
-            else
+            } else
             {
                 return null;
             }
@@ -310,8 +303,7 @@ namespace Anarkila.DeveloperConsole
             if (success)
             {
                 return value;
-            }
-            else
+            } else
             {
                 return null;
             }

@@ -30,8 +30,7 @@ namespace Anarkila.DeveloperConsole
             if (Instance == null)
             {
                 Instance = this;
-            }
-            else
+            } else
             {
                 Destroy(this);
             }
@@ -92,7 +91,7 @@ namespace Anarkila.DeveloperConsole
             {
                 if (logType == LogType.Error || logType == LogType.Exception)
                 {
-                    message = MessagePrinter.AppendStrackTrace(message, stackTrace, logOption);
+                    message = MessagePrinter.AppendStackTrace(message, stackTrace, logOption);
                 }
 
                 messageBacklog.Add(message);

@@ -42,7 +42,7 @@ namespace Anarkila.DeveloperConsole
             }
 
             // calculate average FPS
-            avgFPS += (deltaTime / Time.timeScale - avgFPS) * 0.03f;
+            avgFPS += ((deltaTime / Time.timeScale) - avgFPS) * 0.03f;
 
             if (HighestDrawCallsCount < UnityStats.drawCalls)
             {
@@ -72,9 +72,8 @@ namespace Anarkila.DeveloperConsole
             string target;
             if (currentTargetFPS <= 0)
             {
-                target = ConsoleConstants.UNLIMITED;
-            }
-            else
+                target = ConsoleConstants.Unlimited;
+            } else
             {
                 target = currentTargetFPS.ToString();
             }

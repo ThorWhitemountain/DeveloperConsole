@@ -22,8 +22,7 @@ namespace Anarkila.DeveloperConsole
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-            }
-            else
+            } else
             {
                 Destroy(gameObject);
                 return;
@@ -57,7 +56,7 @@ namespace Anarkila.DeveloperConsole
 #if UNITY_EDITOR
             if (settings.interfaceStyle == ConsoleGUIStyle.Minimal && settings.allowGUIStyleChangeRuntime)
             {
-                if (settings.UnityLogOption != ConsoleLogOptions.DontPrintLogs ||
+                if (settings.unityLogOption != ConsoleLogOptions.DontPrintLogs ||
                     settings.unityThreadedLogOption != ConsoleLogOptions.DontPrintLogs)
                 {
                     // if you are only using Minimal GUI style, Consider changing settings UnityLogOption and unityThreadedLogOption to ConsoleLogOptions.DontPrintLogs

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Anarkila.DeveloperConsole
 {
@@ -60,6 +61,7 @@ namespace Anarkila.DeveloperConsole
                 case ConsoleGUIStyle.Large:
                     largeConsole.SetActive(enable);
                     break;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
     }

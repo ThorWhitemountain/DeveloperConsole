@@ -31,7 +31,7 @@ namespace Anarkila.DeveloperConsole
             button.onClick.RemoveAllListeners();
         }
 
-        private void CloseButtonClicked()
+        private static void CloseButtonClicked()
         {
             ConsoleEvents.CloseConsole();
         }

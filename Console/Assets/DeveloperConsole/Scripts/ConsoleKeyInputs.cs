@@ -93,8 +93,8 @@ namespace Anarkila.DeveloperConsole
             if (settings != null)
             {
                 searchPreviousCommand = settings.consoleSearchCommandKey;
-                nextSuggestedCommandKeyAlt = settings.NextSuggestedCommandKeyAlt;
-                nextSuggestedCommandKey = settings.NextSuggestedCommandKey;
+                nextSuggestedCommandKeyAlt = settings.nextSuggestedCommandKeyAlt;
+                nextSuggestedCommandKey = settings.nextSuggestedCommandKey;
                 consoleToggleKey = settings.consoleToggleKey;
                 submitKey = settings.consoleSubmitKey;
             }

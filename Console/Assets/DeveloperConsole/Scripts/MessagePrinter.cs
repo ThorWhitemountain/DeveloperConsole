@@ -137,9 +137,9 @@ namespace Anarkila.DeveloperConsole
         public static string AddMessagePrefix(string prefixMessage, string msg)
         {
             sb.Clear();
-            sb.Append(ConsoleConstants.OPENBRACKET);
+            sb.Append(ConsoleConstants.Openbracket);
             sb.Append(prefixMessage);
-            sb.Append(ConsoleConstants.CLOSEDBRACKET);
+            sb.Append(ConsoleConstants.Closedbracket);
             sb.Append(msg);
 
             return sb.ToString();
@@ -148,7 +148,7 @@ namespace Anarkila.DeveloperConsole
         /// <summary>
         /// Append stack trace into string depending on print setting
         /// </summary>
-        public static string AppendStrackTrace(string message, string stackTrace, ConsoleLogOptions printOption)
+        public static string AppendStackTrace(string message, string stackTrace, ConsoleLogOptions printOption)
         {
             switch (printOption)
             {
@@ -156,23 +156,25 @@ namespace Anarkila.DeveloperConsole
                     return message;
 
                 case ConsoleLogOptions.LogExceptionWithStackTrace:
-                    return $"{ConsoleConstants.COLOR_RED_START}{message} {stackTrace} {ConsoleConstants.COLOR_END}";
+                    return new StringBuilder().Append(ConsoleConstants.ColorRedStart).Append(message).Append(" ").Append(stackTrace).Append(" ").Append(ConsoleConstants.ColorEnd).ToString();
 
                 case ConsoleLogOptions.LogWithExceptions:
-                    return $"{ConsoleConstants.COLOR_RED_START}{message} {ConsoleConstants.COLOR_END}";
+                    return new StringBuilder().Append(ConsoleConstants.ColorRedStart).Append(message).Append(" ").Append(ConsoleConstants.ColorEnd).ToString();
 
                 case ConsoleLogOptions.LogExceptionsWithStackTraceEditorOnly:
 #if UNITY_EDITOR
-                    return $"{ConsoleConstants.COLOR_RED_START}{message} {stackTrace} {ConsoleConstants.COLOR_END}";
+                    return new StringBuilder().Append(ConsoleConstants.ColorRedStart).Append(message).Append(" ").Append(stackTrace).Append(" ").Append(ConsoleConstants.ColorEnd).ToString();
 #else
                     return null;
 #endif
                 case ConsoleLogOptions.LogWithExceptionsEditorOnly:
 #if UNITY_EDITOR
-                    return $"{ConsoleConstants.COLOR_RED_START}{message} {ConsoleConstants.COLOR_END}";
+                    return new StringBuilder().Append(ConsoleConstants.ColorRedStart).Append(message).Append(" ").Append(ConsoleConstants.ColorEnd).ToString();
 #else
                     return null;
 #endif
+                case ConsoleLogOptions.DontPrintLogs:
+                case ConsoleLogOptions.LogInfoOnly:
                 default:
                     return message;
             }
@@ -188,12 +190,12 @@ namespace Anarkila.DeveloperConsole
             if (!ConsoleManager.IsRunningOnMainThread(Thread.CurrentThread)
                 || !Application.isPlaying
                 || currentGUIStyle == ConsoleGUIStyle.Minimal
-                || settings.UnityLogOption == ConsoleLogOptions.DontPrintLogs)
+                || settings.unityLogOption == ConsoleLogOptions.DontPrintLogs)
             {
                 return;
             }
 
-            if (settings.UnityLogOption == ConsoleLogOptions.LogInfoOnly && logType != LogType.Log)
+            if (settings.unityLogOption == ConsoleLogOptions.LogInfoOnly && logType != LogType.Log)
             {
                 return;
             }
@@ -202,7 +204,7 @@ namespace Anarkila.DeveloperConsole
             {
                 if (logType is LogType.Error or LogType.Exception)
                 {
-                    text = AppendStrackTrace(text, stackTrace, settings.UnityLogOption);
+                    text = AppendStackTrace(text, stackTrace, settings.unityLogOption);
                 }
 
                 if (settings.printLogType && Debug.isDebugBuild)
@@ -218,7 +220,7 @@ namespace Anarkila.DeveloperConsole
 
             if (!forceIgnoreTimestamp && printMessageTimestamps)
             {
-                text = AddMessagePrefix(DateTime.Now.ToString(ConsoleConstants.DATETIMEFORMAT), text);
+                text = AddMessagePrefix(DateTime.Now.ToString(ConsoleConstants.Datetimeformat), text);
             }
 
             if (!consoleInitialized)

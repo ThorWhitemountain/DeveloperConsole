@@ -18,14 +18,12 @@ namespace Anarkila.DeveloperConsole
         private void Awake()
         {
             CursorState(false);
-            Console.RegisterConsoleStateChangeEvent += ConsoleEvent; // Register console state change event
+            Console.RegisterConsoleStateChangeEvent += ConsoleEvent;
         }
 
         private void OnDestroy()
         {
-            // UnRegister console state change event
-            Console.RegisterConsoleStateChangeEvent -=
-                ConsoleEvent; // Be sure to unregister from events either on OnDestroy() or OnDisable() 
+            Console.RegisterConsoleStateChangeEvent -= ConsoleEvent;
         }
 
         /// <summary>
@@ -47,24 +45,27 @@ namespace Anarkila.DeveloperConsole
 
         private void Update()
         {
-            // Other way to check if Developer Console is open
-            //if (ConsoleAPI.IsConsoleOpen()) return;
+            // Another way to check if Developer Console is open
+            // if (Console.IsConsoleOpen())
+            // {
+            //     return;
+            // }
 
             float rotStrafe = Input.GetAxis("Mouse X");
             float rotFwd = Input.GetAxis("Mouse Y");
 
-            yaw = (yaw + lookSpeed * rotStrafe) % 360f;
-            pitch = (pitch - lookSpeed * rotFwd) % 360f;
+            yaw = (yaw + (lookSpeed * rotStrafe)) % 360f;
+            pitch = (pitch - (lookSpeed * rotFwd)) % 360f;
             transform.rotation = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right);
 
             float speed = Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed);
             float forward = speed * Input.GetAxis("Vertical");
             float right = speed * Input.GetAxis("Horizontal");
             float up = speed * ((Input.GetKey(KeyCode.E) ? 1f : 0f) - (Input.GetKey(KeyCode.Q) ? 1f : 0f));
-            transform.position += transform.forward * forward + transform.right * right + Vector3.up * up;
+            transform.position += (transform.forward * forward) + (transform.right * right) + (Vector3.up * up);
         }
 
-        private void CursorState(bool show)
+        private static void CursorState(bool show)
         {
             Cursor.visible = show;
             Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
